@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d35">
+  <title>Acceso | Almuerzos Conscientes</title>
+  <style>
+    :root{--ink:#173d35;--ink2:#28564a;--muted:#71857e;--line:#dbe7df;--paper:#fbfdf9;--lime:#bedf71;--orange:#e98138;--red:#ce5c5c}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 12% 10%,#edf6e3 0,transparent 35%),radial-gradient(circle at 90% 90%,#fff0df 0,transparent 30%),var(--paper);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;display:grid;place-items:center;padding:22px}.page{width:min(100%,460px)}.brand{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 auto 22px}.avocado{width:54px;height:54px;border-radius:18px;background:var(--lime);display:grid;place-items:center;font-size:31px;animation:float 3s ease-in-out infinite;box-shadow:0 10px 25px #bedf7155}@keyframes float{0%,100%{transform:rotate(-5deg) translateY(0)}50%{transform:rotate(5deg) translateY(-6px)}}.brand h1{font-size:18px;margin:0}.brand p{font-size:11px;color:var(--muted);margin:3px 0 0}.card{background:#fff;border:1px solid var(--line);border-radius:25px;padding:34px;box-shadow:0 24px 70px rgba(34,72,57,.13)}.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:10px;font-weight:800;color:var(--orange);margin:0 0 9px}.title{font:700 35px/1.12 Georgia,serif;margin:0}.subtitle{color:var(--muted);font-size:13px;line-height:1.6;margin:11px 0 25px}label{display:block;color:var(--ink2);font-size:12px;font-weight:700;margin:16px 0 6px}input{width:100%;border:1px solid var(--line);background:#fcfefb;color:var(--ink);padding:12px;border-radius:10px;font:inherit;font-size:13px;outline:0}input:focus{border-color:#6eae87;box-shadow:0 0 0 3px #6eae8725}.btn{width:100%;border:0;border-radius:10px;background:var(--ink);color:#fff;padding:13px;margin-top:21px;font-size:13px;font-weight:800;cursor:pointer}.btn:hover{background:var(--ink2)}.btn:disabled{opacity:.6;cursor:wait}.error{display:none;background:#fff0ef;color:#963d3d;border:1px solid #f2cccc;padding:11px;border-radius:10px;font-size:12px;margin-top:15px}.error.show{display:block}.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:25px}.role{border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;background:#f8fbf7}.role strong{display:block;font-size:12px}.role span{display:block;color:var(--muted);font-size:11px;margin-top:3px}.foot{text-align:center;color:var(--muted);font-size:11px;margin-top:18px}@media(max-width:480px){.card{padding:25px}.title{font-size:30px}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="brand"><div class="avocado">🥑</div><div><h1>Almuerzos Conscientes</h1><p>Gestión PAE escolar</p></div></header>
+    <section class="card">
+      <p class="eyebrow">Acceso institucional</p>
+      <h2 class="title">Ingresa al panel</h2>
+      <p class="subtitle">Escribe tu usuario y contraseña. Después de validarlos en la base de datos, serás dirigido automáticamente al panel principal de <strong>LA APP Almuerzos Conscientes</strong>.</p>
+      <form id="login-form" novalidate>
+        <label for="usuario">Usuario</label>
+        <input type="text" id="usuario" placeholder="Escribe tu usuario" required>
+        
+        <label for="contrasena">Contraseña</label>
+        <input type="password" id="password" placeholder="Escribe tu contraseña" required>
+        <button class="btn" type="submit">Ingresar</button>
+        <div id="error" class="error" role="alert"></div>
+      </form>
+      <div class="roles"><div class="role"><strong>Administración</strong><span>Gestión completa</span></div><div class="role"><strong>Docente</strong><span>Operación escolar</span></div></div>
+    </section>
+    
+
+  <nav aria-label="Navegación del proyecto" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:18px;">
+    <a href="estudiantes.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:10px;background:var(--ink);color:#fff;text-decoration:none;font-size:12px;font-weight:800;border:1px solid var(--ink);margin:5px;"> Registro de estudiantes</a>
+    <a href="visionmision.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:10px;background:var(--ink);color:#fff;text-decoration:none;font-size:12px;font-weight:800;border:1px solid var(--ink);margin:5px;"> Visión y misión / inicio</a>
+  </nav>
+  </main>
+  <script>
+        const formularioLogin = document.getElementById('login-form');
+        const botonLogin = formularioLogin.querySelector('.btn');
+        const cajaError = document.getElementById('error');
+
+        function mostrarError(mensaje) {
+            cajaError.textContent = mensaje;
+            cajaError.classList.add('show');
+        }
+
+        async function verificarLogin() {
+            const usuario = document.getElementById('usuario').value.trim().toLowerCase();
+            const contrasena = document.getElementById('password').value;
+            cajaError.classList.remove('show');
+            if (!usuario || !contrasena) {
+                mostrarError('Ingrese usuario y contraseña.');
+                return;
+            }
+            botonLogin.disabled = true;
+            botonLogin.textContent = 'Validando...';
+            try {
+                const respuesta = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario, contrasena })
+                });
+                const datos = await respuesta.json();
+                if (datos.ok) {
+                    window.location.href = datos.redirect || '/index.html';
+                    return;
+                }
+                mostrarError(datos.error || 'Usuario o contraseña incorrectos.');
+            } catch (e) {
+                mostrarError('No hay conexión con el servidor. Verifique que la aplicación esté en ejecución.');
+            } finally {
+                botonLogin.disabled = false;
+                botonLogin.textContent = 'Ingresar';
+            }
+        }
+
+        formularioLogin.addEventListener('submit', function (evento) {
+            evento.preventDefault();
+            verificarLogin();
+        });
+    </script>
+</body>
+</html>

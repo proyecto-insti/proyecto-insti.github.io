@@ -1,0 +1,378 @@
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Almuerzos Conscientes | Misión y Visión</title>
+
+  <style>
+    :root {
+      --ink: #173d35;
+      --ink2: #28564a;
+      --muted: #71857e;
+      --line: #dbe7df;
+      --paper: #fbfdf9;
+      --lime: #bedf71;
+      --orange: #e98138;
+      --blue: #eaf3fb;
+      --blueink: #376180;
+      --shadow: 0 24px 70px rgba(34,72,57,.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 10% 8%, #edf6e3 0, transparent 34%),
+        radial-gradient(circle at 90% 90%, #fff0df 0, transparent 28%),
+        var(--paper);
+      color: var(--ink);
+      font-family: Inter, system-ui, sans-serif;
+      padding: 30px 18px;
+    }
+
+    .page {
+      width: min(100%, 1000px);
+      margin: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 auto 26px;
+    }
+
+    .avocado {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background: var(--lime);
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
+      font-size: 17px;
+      margin: 0;
+    }
+
+    .brand p {
+      font-size: 11px;
+      color: var(--muted);
+      margin: 3px 0 0;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 32px;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--orange);
+      margin: 0 0 9px;
+    }
+
+    .title {
+      font: 700 34px/1.12 Georgia, serif;
+      margin: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+      max-width: 650px;
+      margin: 12px auto 28px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .mv-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .mv-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 12px 32px rgba(23,61,53,.06);
+      border-top: 4px solid var(--lime);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .mv-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 38px rgba(23,61,53,.10);
+    }
+
+    .vision {
+      border-top-color: var(--orange);
+    }
+
+    .mv-heading {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .mv-icon {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: #edf6e3;
+      font-size: 25px;
+    }
+
+    .vision .mv-icon {
+      background: #fff0df;
+    }
+
+    .mv-heading h3 {
+      font: 700 24px/1.2 Georgia, serif;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .mv-heading small {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      margin-bottom: 5px;
+    }
+
+    .mv-text {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.9;
+      margin: 0;
+    }
+
+    .mv-highlight {
+      margin-top: 22px;
+      padding: 13px 15px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 11px;
+      line-height: 1.7;
+      color: var(--ink2);
+    }
+
+    .purpose {
+      margin-top: 22px;
+      padding: 20px;
+      border-radius: 17px;
+      background: var(--ink);
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .purpose-icon {
+      font-size: 30px;
+      flex-shrink: 0;
+    }
+
+    .purpose strong {
+      font-size: 13px;
+    }
+
+    .purpose p {
+      margin: 5px 0 0;
+      color: #d5e5d9;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 10px;
+      margin: 24px 0 0;
+      line-height: 1.8;
+    }
+
+    .footer span {
+      color: var(--orange);
+    }
+
+    @media (max-width: 680px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      .card {
+        padding: 22px 16px;
+        border-radius: 21px;
+      }
+
+      .mv-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        font-size: 29px;
+      }
+
+      .mv-card {
+        padding: 21px;
+      }
+
+      .mv-heading h3 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <!-- IDENTIDAD INSTITUCIONAL -->
+    <header class="brand">
+      <div class="avocado">🥑</div>
+      <div>
+        <h1>Almuerzos Conscientes</h1>
+        <p>Nuestro compromiso con una alimentación responsable</p>
+      </div>
+    </header>
+
+    <section class="card">
+
+      <!-- ENCABEZADO -->
+      <div class="intro">
+        <p class="eyebrow">Identidad del proyecto</p>
+
+        <h2 class="title">
+          Nuestra misión y visión
+        </h2>
+
+        <p class="subtitle">
+          Trabajamos por una comunidad educativa más consciente,
+          donde la tecnología, la alimentación responsable y el
+          cuidado de los recursos se unen para generar un cambio.
+        </p>
+      </div>
+
+      <!-- TARJETAS DE MISIÓN Y VISIÓN -->
+      <div class="mv-grid">
+
+        <article class="mv-card">
+          <div class="mv-heading">
+            <div class="mv-icon">🎯</div>
+            <div>
+              <small>NUESTRO PROPÓSITO</small>
+              <h3>Misión</h3>
+            </div>
+          </div>
+
+          <p class="mv-text">
+            En Almuerzos Conscientes buscamos promover el uso
+            responsable de los alimentos del Programa de
+            Alimentación Escolar (PAE), mediante herramientas
+            tecnológicas que permitan registrar, organizar y
+            analizar información sobre los almuerzos, el gramaje
+            y el desperdicio. Queremos fomentar buenos hábitos
+            en los estudiantes, aprovechar mejor los recursos
+            y contribuir al bienestar de nuestra comunidad
+            educativa.
+          </p>
+
+          <div class="mv-highlight">
+            <strong>🍃 Nuestro compromiso</strong><br>
+            Aprovechar los alimentos y promover hábitos
+            responsables dentro de la institución.
+          </div>
+        </article>
+
+        <article class="mv-card vision">
+          <div class="mv-heading">
+            <div class="mv-icon">🌱</div>
+            <div>
+              <small>NUESTRO FUTURO</small>
+              <h3>Visión</h3>
+            </div>
+          </div>
+
+          <p class="mv-text">
+            Aspiramos a que Almuerzos Conscientes se convierta
+            en una iniciativa escolar que impulse una cultura
+            de alimentación responsable, ayude a reducir el
+            desperdicio y fortalezca el cuidado de los recursos.
+            Buscamos aprovechar la tecnología y los datos para
+            identificar oportunidades de mejora en el PAE y
+            motivar a los estudiantes a participar en la
+            construcción de una institución más consciente,
+            participativa y sostenible.
+          </p>
+
+          <div class="mv-highlight">
+            <strong>🌍 Nuestra meta</strong><br>
+            Construir una comunidad educativa comprometida
+            con el aprovechamiento de los alimentos.
+          </div>
+        </article>
+
+    
+
+      </div>
+
+      <!-- MENSAJE FINAL -->
+      <div class="purpose">
+        <div class="purpose-icon">🥑</div>
+        <div>
+          <strong>Almuerzos Conscientes</strong>
+          <p>
+            Cada alimento cuenta. Cada acción genera conciencia.
+            Juntos podemos cuidar nuestros recursos y construir
+            un futuro más sostenible.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+    <nav aria-label="Navegación del proyecto" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:22px 0;">
+      <a href="estudiantes.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:10px;background:var(--ink);color:#fff;text-decoration:none;font-size:12px;font-weight:800;border:1px solid var(--ink);margin:5px;"> Ir a estudiantes</a>
+      <a href="index1.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:10px;background:var(--ink);color:#fff;text-decoration:none;font-size:12px;font-weight:800;border:1px solid var(--ink);margin:5px;"> Ir al inicio / acceso</a>
+    </nav>
+
+    <footer class="footer">
+      <span>🍃</span> ALIMENTACIÓN RESPONSABLE · TECNOLOGÍA · SOSTENIBILIDAD
+      <br>
+      Proyecto institucional · 2026
+    </footer>
+
+  </main>
+</body>
+</html>

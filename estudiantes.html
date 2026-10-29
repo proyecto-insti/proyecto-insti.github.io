@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registro de consumo | Almuerzos Conscientes</title>
+<style>:root{--ink:#173d35;--muted:#71857e;--line:#dbe7df;--lime:#bedf71;--orange:#e98138;--red:#ce5c5c}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#fbfdf9;color:var(--ink);font-family:Inter,system-ui,sans-serif;display:grid;place-items:center;padding:20px}.page{width:min(100%,680px)}.brand{display:flex;gap:12px;align-items:center;justify-content:center;margin-bottom:20px}.avocado{font-size:35px;background:var(--lime);padding:8px 12px;border-radius:16px}.brand h1{font-size:18px;margin:0}.brand p{font-size:11px;color:var(--muted);margin:3px 0}.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:32px;box-shadow:0 20px 60px #22483918}.eyebrow{text-align:center;color:var(--orange);font-size:10px;text-transform:uppercase;letter-spacing:.15em;font-weight:800}.title{text-align:center;font:700 33px Georgia,serif;margin:0}.subtitle{text-align:center;color:var(--muted);font-size:13px;line-height:1.6}.field{margin:22px 0}label{display:block;font-size:12px;font-weight:700;margin-bottom:7px}input,select{width:100%;padding:14px;border:1px solid var(--line);border-radius:11px;font:inherit;color:var(--ink);background:#fcfefb}input:focus,select:focus{outline:0;border-color:#6eae87;box-shadow:0 0 0 4px #6eae8725}.btn{width:100%;border:0;border-radius:11px;padding:14px;background:var(--ink);color:#fff;font-weight:800;cursor:pointer}.btn:hover{background:#28564a}.notice{padding:12px;border-radius:10px;font-size:12px;margin-bottom:15px}.notice.ok{background:#edf8ee;color:#317049}.notice.error{background:#fff0ef;color:#963d3d}.help{font-size:11px;color:var(--muted);margin-top:6px}.footer{text-align:center;margin-top:15px;font-size:11px}.footer a{color:var(--ink)}.match{display:none;padding:12px;border-radius:10px;background:#eef5fb;color:#376180;font-size:12px;margin-top:12px}.match.show{display:block}.match.success{background:#edf8ee;color:#317049}.match.error{background:#fff0ef;color:#963d3d}.light{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:middle;background:#9db3ac}.light.ok{background:#3fae5c;box-shadow:0 0 0 3px #dff3e2}.light.error{background:#ce5c5c;box-shadow:0 0 0 3px #fde9e8}@media(max-width:560px){.card{padding:24px 19px}.title{font-size:28px}}</style>
+</head>
+<body><main class="page"><div class="brand">
+    <div class="avocado">🥑</div><div><h1>Almuerzos Conscientes</h1>
+        <p>Registro diario de alimentación</p>
+    </div></div>
+    <section class="card">
+        <p class="eyebrow">Formulario de estudiante</p>
+        <h2 class="title">Registro de consumo</h2>
+        <p class="subtitle">Ingresa tu número de documento de identidad y selecciona el servicio que te corresponde: vaso de leche o almuerzo. Si el número presenta un error o no lo recuerdas, dirígete al docente encargado del restaurante escolar para recibir ayuda.
+
+            <form method="post" action="/estudiantes/guardar" id="consumption-form">
+                <div class="field">
+                    <label for="documento">Número de documento</label>
+                    <input id="documento" name="documento" type="text" required inputmode="numeric" autocomplete="off" pattern="[0-9]+" oninput="this.value=this.value.replace(/\D/g,'')" placeholder="Solo números">
+                    <span class="help">No se permiten letras ni símbolos.</span>
+                </div>
+                <div id="match" class="match">
+
+                </div><div class="field">
+                    <label for="tipo_consumo">¿Qué recibe?</label>
+                    <select id="tipo_consumo" name="tipo_consumo" required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="vaso_leche">Vaso de leche</option>
+                        <option value="almuerzo">Almuerzo</option>
+                    </select>
+                </div>
+                <button class="btn" type="submit">Registrar consumo</button>
+            </form>
+            
+        </section>
+    <nav aria-label="Navegación del proyecto" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:18px;">
+      <a href="qr_estudiantes.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:10px;background:var(--ink);color:#fff;text-decoration:none;font-size:12px;font-weight:800;border:1px solid var(--ink);margin:5px;"> Volver al QR</a>
+      <a href="visionmision.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:10px;background:var(--ink);color:#fff;text-decoration:none;font-size:12px;font-weight:800;border:1px solid var(--ink);margin:5px;"> Visión y misión</a>
+    </nav>
+
+    </main>
+    <script>const input=document.getElementById('documento'),match=document.getElementById('match'),form=document.getElementById('consumption-form');let timer;function localStudents()
+    {try{return JSON.parse(localStorage.getItem('ac-store-v4')||'{}').students||[]}catch(e){return[]}}
+    function showMatch(text,kind='info')
+    {const dot=kind==='success'?'ok':kind==='error'?'error':'';match.innerHTML=`<span class="light ${dot}"></span>${text}`;match.className=`match show ${kind}`}
+    async function findStudent(){const local=localStudents().find(x=>x.documento===input.value);if(local){showMatch(`Activo: ${local.nombre} 
+        · documento verificado · carpeta ${local.grado}`);return local}
+        try{const r=await fetch('/api/estudiantes');const j=await r.json();const s=(j.data||[]).find(x=>x.documento===input.value);if(s)showMatch(`Activo: ${s.nombre}
+         · documento verificado · carpeta ${s.grado}`);else showMatch('No está activo: este documento todavía no está registrado en ninguna carpeta.','error');
+         return s}catch(e){showMatch('No se pudo verificar ahora. Revise la conexión y vuelva a intentar.','error')}}input.addEventListener('input',()=>{clearTimeout(timer);match.className='match';if(input.value.length<4)
+         return;timer=setTimeout(findStudent,250)});form.addEventListener('submit',async e=>{e.preventDefault();const documento=input.value.trim(),tipo_consumo=document.getElementById('tipo_consumo').value;if(!/^\d+$/.test(documento)){showMatch('Error: el documento debe contener solo números.','error');return}if(!tipo_consumo){showMatch('Error: seleccione Vaso de leche o Almuerzo.','error');return}const student=await findStudent();if(!student){showMatch('No se guardó: el documento no está registrado.','error');return}try{const r=await fetch('/api/estudiantes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({documento,nombre:student.nombre,tipo_consumo})});const j=await r.json();if(r.ok&&j.ok!==false){const hora=(j.data&&j.data.hora)?j.data.hora.slice(0,5):new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});showMatch(`Guardado correctamente: ${student.nombre} · ${tipo_consumo==='vaso_leche'?'Vaso de leche':'Almuerzo'} · hora ${hora}.`,'success');
+try{
+  const payload={documento,fecha:new Date().toISOString().slice(0,10),hora,tipo_consumo};
+  const ch=new BroadcastChannel('ac-students'); ch.postMessage(payload); ch.close();
+}catch(e){}
+try{localStorage.setItem('ac-students-ping',Date.now().toString())}catch(e){}
+if(window.opener&&window.opener.refreshStudentControl)window.opener.refreshStudentControl(true);
+form.reset();return}}catch(e){}try{const horaLocal=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});const data=JSON.parse(localStorage.getItem('ac-store-v4')||'{}');data.students=data.students||[];const local=data.students.find(x=>x.documento===documento);if(local){const hoy=new Date().toISOString().slice(0,10);data.control=data.control||{};data.control[hoy]=data.control[hoy]||[];const rows=data.control[hoy];const row=rows.find(x=>x.documento===documento);if(row){row.estado='consumio';row.tipo_consumo=tipo_consumo;row.hora=horaLocal}else rows.push({id:local.id,nombre:local.nombre,documento:local.documento,grado:local.grado,estado:'consumio',tipo_consumo,hora:horaLocal});localStorage.setItem('ac-store-v4',JSON.stringify(data));try{const ch=new BroadcastChannel('ac-students');ch.postMessage({documento,fecha:hoy,hora:horaLocal,tipo_consumo});ch.close()}catch(e){}try{localStorage.setItem('ac-students-ping',Date.now().toString())}catch(e){}showMatch(`Registro guardado correctamente en este navegador: ${local.nombre} · hora ${horaLocal}.`,'success');form.reset()}else showMatch('No se guardó: el documento no está activo.','error')}catch(e){showMatch('No se guardó. Ocurrió un error inesperado.','error')}});
+
+    </script>
+    </body>
+    </html>

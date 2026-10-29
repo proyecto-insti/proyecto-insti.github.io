@@ -1,0 +1,2776 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d35">
+  <title>Almuerzos Conscientes | PAE</title>
+  <script src="https://unpkg.com/html5-qrcode" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ink: #173d35;
+      --ink-2: #28564a;
+      --muted: #71857e;
+      --line: #dbe7df;
+      --paper: #fbfdf9;
+      --card: #fff;
+      --mint: #e8f2e6;
+      --lime: #bedf71;
+      --orange: #e98138;
+      --orange-soft: #fff0e4;
+      --red: #ce5c5c;
+      --red-soft: #fff0ef;
+      --shadow: 0 18px 48px rgba(34, 72, 57, .09);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "DM Sans", sans-serif;
+      line-height: 1.45
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 248px 1fr;
+      min-height: 100vh
+    }
+
+    .sidebar {
+      background: var(--ink);
+      color: #fff;
+      padding: 26px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 0 8px 26px;
+      border-bottom: 1px solid rgba(255, 255, 255, .13)
+    }
+
+    .brand-mark {
+      width: 45px;
+      height: 45px;
+      border-radius: 15px;
+      background: var(--lime);
+      display: grid;
+      place-items: center;
+      font-size: 27px;
+      animation: bob 3.2s ease-in-out infinite;
+      box-shadow: 0 8px 20px rgba(190, 223, 113, .2)
+    }
+
+    @keyframes bob {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-5deg)
+      }
+
+      50% {
+        transform: translateY(-5px) rotate(5deg)
+      }
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 15px;
+      letter-spacing: .01em
+    }
+
+    .brand small {
+      display: block;
+      color: #b6cbc2;
+      font-size: 11px;
+      margin-top: 2px
+    }
+
+    .side-label {
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: 10px;
+      color: #8eaea1;
+      font-weight: 700;
+      margin: 25px 10px 8px
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 4px
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 0;
+      color: #b8cbc3;
+      border-radius: 12px;
+      padding: 12px 12px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: .2s
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: #2d5c4e;
+      color: #fff
+    }
+
+    .nav-btn.active {
+      box-shadow: inset 3px 0 var(--lime)
+    }
+
+    .nav-btn .nav-icon {
+      width: 20px;
+      text-align: center;
+      color: var(--lime);
+      font-size: 15px
+    }
+
+    .side-bottom {
+      margin-top: auto
+    }
+
+    .role-card {
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255, 255, 255, .05)
+    }
+
+    .role-card label {
+      color: #abc2b8;
+      font-size: 11px;
+      display: block;
+      margin-bottom: 6px
+    }
+
+    .role-card select {
+      width: 100%;
+      background: #214b40;
+      color: white;
+      border-color: #52746a;
+      padding: 8px;
+      border-radius: 8px
+    }
+
+    .content {
+      min-width: 0
+    }
+
+    .topbar {
+      height: 76px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 42px;
+      background: rgba(251, 253, 249, .92);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      backdrop-filter: blur(12px)
+    }
+
+    .crumb {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .crumb b {
+      color: var(--ink);
+      font-size: 14px
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .live-pill {
+      font-size: 11px;
+      color: #4b7565;
+      background: var(--mint);
+      border-radius: 20px;
+      padding: 7px 11px;
+      font-weight: 700
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    .user-avatar {
+      height: 31px;
+      width: 31px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--orange-soft);
+      color: var(--orange)
+    }
+
+    main {
+      max-width: 1330px;
+      margin: 0 auto;
+      padding: 36px 42px 60px
+    }
+
+    .panel {
+      display: none;
+      animation: enter .28s ease
+    }
+
+    .panel.active {
+      display: block
+    }
+
+    @keyframes enter {
+      from {
+        opacity: 0;
+        transform: translateY(7px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-weight: 700;
+      color: var(--orange);
+      margin: 0 0 8px
+    }
+
+    .page-title {
+      font: 700 34px/1.12 "Playfair Display", serif;
+      margin: 0;
+      color: var(--ink)
+    }
+
+    .page-subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 9px 0 0
+    }
+
+    .heading-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin: 0 0 22px
+    }
+
+    .panel {
+      margin: 0
+    }
+
+    .content main {
+      min-height: calc(100vh - 76px)
+    }
+
+    .date-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .date-control input {
+      width: 145px
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr))
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr))
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 23px
+    }
+
+    .stat {
+      position: relative;
+      overflow: hidden;
+      min-height: 139px
+    }
+
+    .stat:after {
+      content: "";
+      position: absolute;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      right: -30px;
+      top: -28px;
+      background: var(--mint)
+    }
+
+    .stat.orange:after {
+      background: var(--orange-soft)
+    }
+
+    .stat.lime:after {
+      background: #f2f7df
+    }
+
+    .stat.red:after {
+      background: var(--red-soft)
+    }
+
+    .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--muted);
+      font-weight: 700
+    }
+
+    .stat-value {
+      font: 700 32px "Playfair Display", serif;
+      margin-top: 13px;
+      position: relative;
+      z-index: 1
+    }
+
+    .stat-note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    .stat-icon {
+      position: absolute;
+      right: 17px;
+      top: 17px;
+      z-index: 1;
+      color: var(--ink-2);
+      font-size: 17px
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 18px
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0
+    }
+
+    .card-title span {
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 12px;
+      margin-left: 7px
+    }
+
+    .text-link {
+      border: 0;
+      background: none;
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.18fr .82fr;
+      gap: 16px;
+      margin-top: 16px
+    }
+
+    .menu-highlight {
+      background: var(--ink);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      min-height: 215px
+    }
+
+    .menu-highlight:after {
+      content: "🥑";
+      position: absolute;
+      right: 28px;
+      top: 20px;
+      font-size: 85px;
+      opacity: .15;
+      transform: rotate(10deg)
+    }
+
+    .menu-kicker {
+      color: var(--lime);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .13em;
+      font-weight: 700
+    }
+
+    .menu-highlight h3 {
+      font: 700 25px "Playfair Display", serif;
+      max-width: 66%;
+      margin: 10px 0 19px
+    }
+
+    .menu-meta {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 9px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .1);
+      font-size: 11px;
+      color: #d3e3db
+    }
+
+    .tag strong {
+      color: var(--lime)
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 20px;
+      padding: 5px 9px;
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--mint);
+      color: var(--ink-2)
+    }
+
+    .badge.orange {
+      background: var(--orange-soft);
+      color: #a9561b
+    }
+
+    .badge.red {
+      background: var(--red-soft);
+      color: #a64040
+    }
+
+    .badge.gray {
+      background: #f0f4f1;
+      color: var(--muted)
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 13px
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 40px;
+      align-items: center;
+      gap: 9px;
+      font-size: 12px
+    }
+
+    .bar-track {
+      height: 8px;
+      background: #edf3ee;
+      border-radius: 10px;
+      overflow: hidden
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--lime);
+      border-radius: 10px
+    }
+
+    .bar-fill.orange {
+      background: var(--orange)
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-2);
+      margin-bottom: 6px
+    }
+
+    .field {
+      margin-bottom: 14px
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfefb;
+      color: var(--ink);
+      padding: 11px 12px;
+      border-radius: 10px;
+      outline: none;
+      transition: .18s;
+      font-size: 13px
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #6eae87;
+      box-shadow: 0 0 0 3px rgba(110, 174, 135, .14)
+    }
+
+    .hint {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 5px
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      margin-top: 16px;
+      flex-wrap: wrap
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 15px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .18s;
+      text-decoration: none
+    }
+
+    .btn:hover {
+      transform: translateY(-1px)
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: #fff
+    }
+
+    .btn-primary:hover {
+      background: #285d4f
+    }
+
+    .btn-lime {
+      background: var(--lime);
+      color: var(--ink)
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: var(--ink-2);
+      border: 1px solid var(--line)
+    }
+
+    .btn-orange {
+      background: var(--orange);
+      color: #fff
+    }
+
+    .btn-danger {
+      background: var(--red);
+      color: #fff
+    }
+
+    .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none
+    }
+
+    .notice {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 16px
+    }
+
+    .notice.show {
+      display: flex;
+      gap: 8px;
+      align-items: center
+    }
+
+    .notice.success {
+      background: #edf8ee;
+      color: #317049;
+      border: 1px solid #cbe9ce
+    }
+
+    .notice.error {
+      background: var(--red-soft);
+      color: #963d3d;
+      border: 1px solid #f2cccc
+    }
+
+    .notice.info {
+      background: #eef5fb;
+      color: #376180;
+      border: 1px solid #d4e4f1
+    }
+
+    .scanner-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px
+    }
+
+    .scanner-box {
+      border: 1px dashed #a9c5b3;
+      border-radius: 14px;
+      background: #f6fbf5;
+      min-height: 280px;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      text-align: center
+    }
+
+    .scanner-placeholder .camera {
+      font-size: 38px;
+      color: var(--ink-2);
+      margin-bottom: 8px
+    }
+
+    .scanner-placeholder p {
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 230px;
+      margin: 0 auto 14px
+    }
+
+    .reader {
+      width: 100%;
+      max-width: 440px;
+      margin: auto
+    }
+
+    .confirm-card {
+      background: var(--orange-soft);
+      border: 1px solid #f8d5bd;
+      border-radius: 14px;
+      padding: 18px
+    }
+
+    .confirm-card h3 {
+      font-size: 14px;
+      margin: 0 0 7px
+    }
+
+    .confirm-card p {
+      font-size: 12px;
+      color: #825638;
+      margin: 0 0 14px
+    }
+
+    .method-switch {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px
+    }
+
+    .method {
+      flex: 1;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 9px;
+      padding: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    .method.active {
+      border-color: var(--orange);
+      background: var(--orange-soft);
+      color: #a9561b
+    }
+
+    .toggle-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--line);
+      padding-top: 15px;
+      margin-top: 13px;
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    .switch {
+      position: relative;
+      width: 42px;
+      height: 23px;
+      display: inline-block
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: #cbd7d0;
+      transition: .2s
+    }
+
+    .slider:before {
+      content: "";
+      position: absolute;
+      width: 17px;
+      height: 17px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
+      background: #fff;
+      transition: .2s
+    }
+
+    .switch input:checked+.slider {
+      background: #6eae87
+    }
+
+    .switch input:checked+.slider:before {
+      transform: translateX(19px)
+    }
+
+    .component-table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    .component-table th,
+    .component-table td {
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      padding: 9px 6px;
+      font-size: 12px
+    }
+
+    .component-table th {
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .05em
+    }
+
+    .component-table input,
+    .component-table select {
+      padding: 8px;
+      font-size: 12px
+    }
+
+    .remove-row {
+      background: none;
+      border: 0;
+      color: var(--red);
+      font-size: 16px
+    }
+
+    .table-wrap {
+      overflow: auto
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px
+    }
+
+    .data-table th,
+    .data-table td {
+      text-align: left;
+      vertical-align: top;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      font-size: 12px
+    }
+
+    .data-table td {
+      line-height: 1.5
+    }
+
+    .data-table td strong,
+    .data-table td b {
+      display: inline-block
+    }
+
+    .group-grammage-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 10px
+    }
+
+    .group-grammage-grid .field {
+      margin: 0
+    }
+
+    .group-grammage-grid label {
+      font-size: 10px;
+      margin-bottom: 4px
+    }
+
+    .group-grammage-grid input {
+      padding: 8px;
+      font-size: 12px
+    }
+
+    .summary-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px
+    }
+
+    .summary-detail {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f8fbf7;
+      padding: 12px;
+      font-size: 12px
+    }
+
+    .summary-detail strong {
+      display: block;
+      color: var(--ink-2);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 6px
+    }
+
+    .summary-detail span {
+      display: block;
+      color: var(--muted);
+      white-space: pre-wrap
+    }
+
+    .report-table-wrap {
+      overflow: auto
+    }
+
+    .report-table-wrap .data-table {
+      min-width: 1250px
+    }
+
+    @media(max-width:720px) {
+      .group-grammage-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      .summary-detail-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .data-table th {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      background: #f8fbf7
+    }
+
+    .data-table tr:hover td {
+      background: #fcfefa
+    }
+
+    .empty {
+      padding: 25px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .qr-code {
+      width: 54px;
+      height: 54px;
+      border: 1px solid var(--line);
+      border-radius: 7px
+    }
+
+    .mini-action {
+      background: #f4f8f4;
+      border: 0;
+      border-radius: 7px;
+      color: var(--ink-2);
+      font-size: 11px;
+      padding: 7px 9px;
+      font-weight: 700
+    }
+
+    .mini-action:hover {
+      background: var(--mint)
+    }
+
+    .report-toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: end;
+      flex-wrap: wrap
+    }
+
+    .report-toolbar .field {
+      margin: 0;
+      min-width: 150px
+    }
+
+    .report-toolbar .field:last-of-type {
+      min-width: 170px
+    }
+
+    .segmentation {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    .segment {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px
+    }
+
+    .segment.primary {
+      background: #f5faea
+    }
+
+    .segment.superior {
+      background: #eef6f3
+    }
+
+    .segment h3 {
+      margin: 0 0 5px;
+      font-size: 14px
+    }
+
+    .segment p {
+      color: var(--muted);
+      font-size: 11px;
+      margin: 0 0 12px
+    }
+
+    .segment .big {
+      font: 700 26px "Playfair Display", serif
+    }
+
+    .canvas-wrap {
+      height: 280px;
+      position: relative
+    }
+
+    .footer-note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 15px
+    }
+
+    .grade-folders {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px
+    }
+
+    .grade-folder {
+      border: 1px solid var(--line);
+      background: #f7fbf6;
+      border-radius: 12px;
+      padding: 13px;
+      text-align: left;
+      cursor: pointer;
+      color: var(--ink);
+      font-weight: 700
+    }
+
+    .grade-folder:hover,
+    .grade-folder.active {
+      background: var(--mint);
+      border-color: #8fc49b
+    }
+
+    .folder-list {
+      display: none;
+      margin-top: 12px
+    }
+
+    .folder-list.active {
+      display: block
+    }
+
+    .student-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap
+    }
+
+    .btn-edit-student,
+    .btn-delete-student {
+      padding: 7px 9px;
+      font-size: 11px
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin-right: 6px;
+      background: #d34f4f;
+      box-shadow: 0 0 0 3px #fff0ef
+    }
+
+    .status-dot.green {
+      background: #4aa56a;
+      box-shadow: 0 0 0 3px #edf8ee
+    }
+
+    @media(max-width:720px) {
+      .grade-folders {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    @media(max-width:1050px) {
+      .grid-4 {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .split,
+      .scanner-layout {
+        grid-template-columns: 1fr
+      }
+
+      .topbar {
+        padding: 0 24px
+      }
+
+      main {
+        padding: 28px 24px 50px
+      }
+    }
+
+    @media(max-width:720px) {
+      .shell {
+        display: block
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+        padding: 13px 14px
+      }
+
+      .brand {
+        padding-bottom: 13px;
+        border: 0
+      }
+
+      .side-label,
+      .side-bottom {
+        display: none
+      }
+
+      .nav-list {
+        display: flex;
+        overflow: auto;
+        gap: 3px
+      }
+
+      .nav-btn {
+        min-width: max-content;
+        padding: 9px 11px
+      }
+
+      .nav-btn.active {
+        box-shadow: inset 0 -3px var(--lime)
+      }
+
+      .topbar {
+        height: 58px;
+        padding: 0 15px
+      }
+
+      main {
+        padding: 23px 15px
+      }
+
+      .page-title {
+        font-size: 28px
+      }
+
+      .heading-row {
+        align-items: flex-start;
+        flex-direction: column;
+        margin-bottom: 20px
+      }
+
+      .date-control {
+        width: 100%
+      }
+
+      .date-control input {
+        flex: 1
+      }
+
+      .grid-4,
+      .grid-3,
+      .grid-2,
+      .segmentation {
+        grid-template-columns: 1fr
+      }
+
+      .card {
+        padding: 17px
+      }
+
+      .stat {
+        min-height: 115px
+      }
+
+      .menu-highlight h3 {
+        font-size: 22px
+      }
+
+      .data-table {
+        min-width: 540px
+      }
+
+      .crumb {
+        font-size: 11px
+      }
+    }
+
+    .pae-balance {
+      margin-top: 16px;
+      background: linear-gradient(120deg, #f5faea, #eef6f3);
+      border: 1px solid #d9e8d7
+    }
+
+    .pae-balance-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px
+    }
+
+    .pae-balance-item {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px
+    }
+
+    .pae-balance-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      font-weight: 700
+    }
+
+    .pae-balance-value {
+      font: 700 24px "Playfair Display", serif;
+      margin-top: 7px
+    }
+
+    .pae-balance-item.waste .pae-balance-value {
+      color: #b64b4b
+    }
+
+    .pae-balance-item.consumed .pae-balance-value {
+      color: #317049
+    }
+
+    @media(max-width:720px) {
+      .pae-balance-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    /* Ajustes: barra lateral y desbordes */
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: hidden
+    }
+
+    .shell {
+      grid-template-columns: 248px minmax(0, 1fr)
+    }
+
+    .sidebar {
+      overflow-y: auto
+    }
+
+    .nav-list {
+      width: 100%
+    }
+
+    .nav-btn {
+      width: 100%;
+      justify-content: flex-start
+    }
+
+    .nav-btn .nav-icon {
+      flex: 0 0 20px
+    }
+
+    .grid>*,
+    .split>*,
+    .card {
+      min-width: 0
+    }
+
+    .report-table-wrap {
+      max-width: 100%
+    }
+
+    .gram-table td,
+    .gram-table th {
+      white-space: nowrap
+    }
+
+    .obs-box {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--muted);
+      background: #f8fbf7;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 8px
+    }
+
+    .obs-box b {
+      color: var(--ink-2)
+    }
+
+    .carb-wrap {
+      height: 240px;
+      position: relative
+    }
+
+    .statistics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    .statistics-table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    .statistics-table th,
+    .statistics-table td {
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 12px
+    }
+
+    .statistics-table th {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      background: #f8fbf7
+    }
+
+    .statistics-table td:not(:first-child) {
+      font-weight: 700
+    }
+
+    .statistics-chart {
+      height: 280px;
+      position: relative
+    }
+
+    @media(max-width:720px) {
+      .statistics-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .svc-head {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin: 26px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--line)
+    }
+
+    .svc-head h2 {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: .14em;
+      color: var(--ink)
+    }
+
+    .svc-head span {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .pae-g-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important
+    }
+
+    @media(max-width:560px) {
+      .pae-g-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important
+      }
+    }
+
+    .relation-table {
+      min-width: 1180px
+    }
+  </style>
+  <style>
+    .bar-row.wide {
+      grid-template-columns: 90px 1fr 150px
+    }
+
+    .bar-row.wide b {
+      text-align: right;
+      font-size: 11px;
+      white-space: nowrap
+    }
+
+    .gg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 8px
+    }
+
+    .gg-chip {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      padding: 9px 10px;
+      font-size: 11px;
+      line-height: 1.5
+    }
+
+    .gg-chip b {
+      display: block;
+      color: var(--ink-2);
+      font-size: 12px;
+      margin-bottom: 2px
+    }
+
+    .gg-chip span {
+      display: block;
+      color: var(--muted)
+    }
+
+    .kg-hint {
+      display: block;
+      margin-top: 3px;
+      color: #317049;
+      font-weight: 700
+    }
+
+    .relation-table {
+      min-width: 860px
+    }
+
+    .relation-table tr.sub td {
+      background: #f2f7df;
+      font-size: 11px;
+      letter-spacing: .06em
+    }
+
+    .relation-table tr.tot td {
+      background: #f8fbf7;
+      border-top: 2px solid var(--line)
+    }
+
+    .carb-wrap {
+      height: 300px
+    }
+  </style>
+  <style>
+    .pae-rows-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px
+    }
+
+    .pae-rows-table th,
+    .pae-rows-table td {
+      padding: 8px 6px;
+      border-bottom: 1px solid var(--line);
+      font-size: 12px;
+      text-align: left;
+      vertical-align: middle
+    }
+
+    .pae-rows-table th {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted)
+    }
+
+    .pae-rows-table input,
+    .pae-rows-table select {
+      padding: 8px;
+      font-size: 12px
+    }
+
+    .unit-tag {
+      display: inline-block;
+      margin-left: 5px;
+      padding: 3px 7px;
+      border-radius: 8px;
+      background: #eef6f3;
+      color: #317049;
+      font-size: 11px;
+      font-weight: 700
+    }
+
+    .unit-tag.liter {
+      background: #e6f1fa;
+      color: #2c6a99
+    }
+
+    .pae-delivered-cell {
+      font-weight: 700;
+      color: #317049;
+      white-space: nowrap
+    }
+
+    .pae-totals {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin: 14px 0
+    }
+
+    .pae-total {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f8fbf7;
+      padding: 11px;
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .pae-total b {
+      display: block;
+      margin-top: 4px;
+      color: var(--ink);
+      font-size: 14px
+    }
+
+    .pae-total.good b {
+      color: #317049
+    }
+
+    .pae-total.bad b {
+      color: #b64b4b
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">🥑</div>
+        <div><strong>Almuerzos<br>Conscientes</strong><small>Gestión PAE escolar</small></div>
+      </div>
+      <div class="side-label">Panel de control</div>
+      <nav class="nav-list" aria-label="Navegación principal"><button class="nav-btn active" data-panel="inicio"><span
+            class="nav-icon">⌂</span>Resumen</button><button class="nav-btn" data-panel="menu"><span
+            class="nav-icon">✦</span>Menú y gramaje</button><button class="nav-btn" data-panel="registro"><span
+            class="nav-icon">＋</span>Registro de estudiantes</button><button class="nav-btn"
+          data-panel="estudiantes"><span class="nav-icon">♧</span>Control de estudiantes</button><button class="nav-btn"
+          data-panel="reportes"><span class="nav-icon">▥</span>Reportes</button></nav>
+      <div class="side-bottom">
+        <div class="side-label">Sesión</div>
+        <div class="role-card"><label for="role-select">Viendo como</label><select id="role-select">
+            <option value="admin">Administrador</option>
+            <option value="docente">Docente</option>
+          </select></div>
+      </div>
+    </aside>
+    <div class="content">
+      <header class="topbar">
+        <div class="crumb"><span>PAE / </span><b id="crumb-title">Resumen general</b></div>
+        <div class="top-actions">
+          <div class="global-date-control"><label for="global-date">Fecha del proyecto</label><input type="date"
+              id="global-date" aria-label="Fecha única del proyecto"></div><span class="live-pill">● Sistema
+            activo</span><a href="index1.html" class="boton-cerrar"
+            onclick="event.preventDefault();fetch('/api/logout',{method:'POST'}).finally(()=>window.location.href='index1.html')">Cerrar
+            sesión</a><a href="estudiantes.html" class="boton-cerrar">Registro de estudiante</a>
+
+          <style>
+            .boton-cerrar {
+              display: inline-block;
+              padding: 6px 12px;
+              background-color: #28a745;
+              color: white;
+              text-decoration: none;
+              border-radius: 20px;
+              font-size: 13px;
+              font-weight: bold;
+            }
+
+            .boton-cerrar:hover {
+              background-color: #218838;
+            }
+          </style>
+
+          <div class="user-chip"><span id="role-label">Administrador</span><span class="user-avatar">✦</span></div>
+        </div>
+      </header>
+      <main>
+        <div id="notice" class="notice"></div>
+        <section class="panel active" data-panel-view="inicio">
+          <div class="heading-row">
+            <div>
+              <p class="eyebrow">Buenos días, equipo PAE</p>
+              <h1 class="page-title">Una mirada consciente al almuerzo</h1>
+              <p class="page-subtitle">Registra lo que se sirve, lo que se consume y lo que podemos mejorar.</p>
+            </div>
+            <div class="date-context">Fecha global seleccionada arriba</div>
+          </div>
+          <div class="grid grid-4">
+            <article class="card stat"><span class="stat-icon">▣</span>
+              <div class="stat-label">PAE entregado</div>
+              <div class="stat-value" id="stat-entrega">—</div>
+              <div class="stat-note" id="stat-entrega-note">Sin registro de entrega</div>
+            </article>
+            <article class="card stat orange"><span class="stat-icon">◌</span>
+              <div class="stat-label">Servido estimado</div>
+              <div class="stat-value" id="stat-servido">0 g</div>
+              <div class="stat-note" id="stat-servido-note">Consumos × gramaje</div>
+            </article>
+            <article class="card stat red"><span class="stat-icon">♲</span>
+              <div class="stat-label">Desperdicio total</div>
+              <div class="stat-value" id="stat-desperdicio">0 g</div>
+              <div class="stat-note" id="stat-desperdicio-note">Sin pesaje todavía</div>
+              <div class="stat-note" id="stat-desperdicio-percent">Pérdida diaria: 0.0%</div>
+            </article>
+            <article class="card stat lime"><span class="stat-icon">✓</span>
+              <div class="stat-label">Consumo efectivo</div>
+              <div class="stat-value" id="stat-efectivo">0 g</div>
+              <div class="stat-note" id="stat-efectivo-note">Aún sin datos del día</div>
+              <div class="stat-note" id="stat-efectivo-note2"></div>
+            </article>
+          </div>
+          <article class="card pae-balance">
+            <div class="card-head">
+              <h2 class="card-title">Balance de gramajes del PAE</h2><span class="badge">g y kg</span>
+            </div>
+            <div class="pae-balance-grid">
+              <div class="pae-balance-item">
+                <div class="pae-balance-label">Gramaje servido PAE</div>
+                <div class="pae-balance-value" id="pae-served-grams">0 g</div>
+              </div>
+              <div class="pae-balance-item waste">
+                <div class="pae-balance-label">Gramaje desperdiciado PAE</div>
+                <div class="pae-balance-value" id="pae-waste-grams">0 g</div>
+              </div>
+              <div class="pae-balance-item consumed">
+                <div class="pae-balance-label">Gramaje consumido PAE</div>
+                <div class="pae-balance-value" id="pae-consumed-grams">0 g</div>
+              </div>
+            </div>
+            <p class="footer-note" id="pae-liters-note"></p>
+          </article>
+          <div class="grid grid-2" style="margin-top:16px">
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Servido por grado</h2><span class="badge">g y kg</span>
+              </div>
+              <div id="served-bars" class="bar-list">
+                <div class="empty">Registra consumos para ver cuánto se sirvió por grado.</div>
+              </div>
+              <p class="footer-note">Servido = consumos confirmados del grado × gramaje por ración.</p>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Menú y gramaje por grupo <span>proteínas, carbohidratos, legumbres…</span></h2>
+                <span class="badge orange">kg por ración</span>
+              </div>
+              <div class="carb-wrap"><canvas id="carb-chart"></canvas></div>
+              <div class="empty" id="carb-chart-empty" style="display:none"></div>
+              <p class="footer-note" id="carb-note"></p>
+            </article>
+          </div>
+          <article class="card" style="margin-top:16px">
+            <div class="card-head">
+              <div>
+                <h2 class="card-title">Almuerzo y PAE: servido, desperdicio y entrega</h2>
+                <p class="hint">Organizado por servicio. Almuerzo: proteínas, carbohidratos, legumbres, ensaladas,
+                  frutas, bebidas y otros por grado (registro del almuerzo). PAE: gramaje servido por grupo, desperdicio
+                  y porcentaje entregado.</p>
+              </div><span class="badge">g y kg</span>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table relation-table">
+                <thead>
+                  <tr>
+                    <th>Servicio</th>
+                    <th>Grado</th>
+                    <th>Proteínas<br><small>por ración</small></th>
+                    <th>Carbohidratos<br><small>por ración</small></th>
+                    <th>Legumbres</th>
+                    <th>Ensaladas</th>
+                    <th>Frutas</th>
+                    <th>Bebidas<br><small>litros</small></th>
+                    <th>Otros</th>
+                    <th>Servido</th>
+                    <th>Desperdicio</th>
+                    <th>% pérdida</th>
+                    <th>Entrega<br><small>almuerzo / PAE</small></th>
+                  </tr>
+                </thead>
+                <tbody id="relation-body"></tbody>
+              </table>
+            </div>
+          </article>
+          <div class="grid grid-2" style="margin-top:16px">
+            <article class="card" style="grid-column:1/-1">
+              <div class="card-head">
+                <div>
+                  <h2 class="card-title">Entrega del PAE por grupo</h2>
+                  <p class="hint">Gramaje servido, entregado y no entregado de cada grupo (sexto 1 a once 3).</p>
+                </div><span class="badge lime">PAE · g y kg</span>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Grupo</th>
+                      <th>Servido</th>
+                      <th>Entregado</th>
+                      <th>No entregado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pae-g-body">
+                    <tr>
+                      <td colspan="4" class="empty">Aún no hay entrega PAE registrada.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="obs-box" id="pae-g-obs" style="margin-top:12px"></div>
+            </article>
+          </div>
+          <div class="grid grid-2" style="margin-top:16px">
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Almuerzo · servido y entregado por componente</h2><span class="badge lime">kg ·
+                  L</span>
+              </div>
+              <div class="carb-wrap"><canvas id="pae-chart"></canvas></div>
+              <div class="empty" id="pae-chart-empty" style="display:none"></div>
+              <p class="footer-note" id="pae-chart-note"></p>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Almuerzo · componentes servidos y entregados</h2><span class="badge">g · kg ·
+                  L</span>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Componente</th>
+                      <th>Alimento</th>
+                      <th>Servido</th>
+                      <th>Entregado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pae-comp-body"></tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+          <div class="grid grid-2" style="margin-top:16px">
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Observaciones de almuerzo</h2>
+              </div>
+              <div class="obs-box" id="obs-lunch"></div>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Observaciones de PAE</h2>
+              </div>
+              <div class="obs-box" id="obs-pae"></div>
+            </article>
+          </div>
+          <div class="split">
+            <article class="card menu-highlight"><span class="menu-kicker">Menú de hoy</span>
+              <h3 id="today-menu-name">Configura el menú del día</h3>
+              <div class="menu-meta"><span class="tag">⚖ <strong id="today-menu-grams">0 g</strong> por
+                  ración</span><span class="tag">◷ <strong id="today-menu-window">09:30 — 13:00</strong></span><span
+                  class="tag" id="today-menu-type">Comida caliente</span></div>
+              <p class="menu-note" id="today-menu-notes">Sin observaciones registradas.</p>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Aceptación por nivel <span>desperdicio estimado</span></h2><button
+                  class="text-link" data-go="reportes">Ver reporte →</button>
+              </div>
+              <div id="acceptance-bars" class="bar-list">
+                <div class="empty">Registra consumos y desperdicios para ver la comparación.</div>
+              </div>
+            </article>
+          </div>
+          <div class="grid grid-2" style="margin-top:16px">
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Menú y componentes <span id="component-date-label">hoy</span></h2><button
+                  class="text-link" data-go="menu">Editar →</button>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Componente</th>
+                      <th>Alimento</th>
+                      <th>Cantidad</th>
+                    </tr>
+                  </thead>
+                  <tbody id="today-components"></tbody>
+                </table>
+                <div class="summary-detail-grid">
+                  <div class="summary-detail"><strong>Proteínas</strong><span id="today-proteins">Sin registrar</span>
+                  </div>
+                  <div class="summary-detail"><strong>Carbohidratos</strong><span id="today-carbs">Sin registrar</span>
+                  </div>
+                </div>
+                <div class="summary-detail" style="margin-top:10px"><strong>Gramaje por grado (g y kg)</strong>
+                  <div id="today-group-grammages" class="gg-grid">Sin gramajes individuales configurados.</div>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Desperdicio por grado</h2><span class="badge gray">g y kg</span>
+              </div>
+              <div id="level-bars" class="bar-list">
+                <div class="empty">Registra desperdicios por grado para ver el detalle.</div>
+              </div>
+              <p class="footer-note">Cada valor corresponde al gramaje registrado en el formulario de desperdicio del
+                almuerzo o del PAE.</p>
+              <div class="summary-observations" id="today-waste-observations">Sin observaciones registradas para esta
+                fecha.</div>
+            </article>
+          </div>
+          <div class="statistics-grid" style="margin-top:16px">
+            <article class="card">
+              <div class="card-head">
+                <div>
+                  <h2 class="card-title">PAE · Estadística del desperdicio</h2>
+                  <p class="hint">Moda, mediana y promedio del desperdicio en gramos, calculados por grado únicamente
+                    para el PAE.</p>
+                </div><span class="badge lime">PAE · g</span>
+              </div>
+              <div class="table-wrap">
+                <table class="statistics-table">
+                  <thead>
+                    <tr>
+                      <th>Indicador</th>
+                      <th>Desperdicio (g)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="summary-pae-statistics-body"></tbody>
+                </table>
+              </div>
+              <div class="statistics-chart"><canvas id="summary-pae-statistics-chart"></canvas></div>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <div>
+                  <h2 class="card-title">Almuerzo · Estadística del desperdicio</h2>
+                  <p class="hint">Moda, mediana y promedio del desperdicio en gramos, calculados por grado únicamente
+                    para el almuerzo.</p>
+                </div><span class="badge orange">Almuerzo · g</span>
+              </div>
+              <div class="table-wrap">
+                <table class="statistics-table">
+                  <thead>
+                    <tr>
+                      <th>Indicador</th>
+                      <th>Desperdicio (g)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="summary-lunch-statistics-body"></tbody>
+                </table>
+              </div>
+              <div class="statistics-chart"><canvas id="summary-lunch-statistics-chart"></canvas></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" data-panel-view="menu">
+          <div class="heading-row">
+            <div>
+              <p class="eyebrow">Configuración flexible</p>
+              <h1 class="page-title">Menú, ración y ventana</h1>
+              <p class="page-subtitle">Define el plato servido y registra el gramaje por componente, de lunes a viernes.
+              </p>
+            </div>
+            <div class="date-context">Fecha global seleccionada arriba</div>
+          </div>
+          <div class="svc-head">
+            <h2>ALMUERZO</h2><span>Menú, componentes y desperdicio del almuerzo</span>
+          </div>
+          <div class="grid grid-2">
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Información del servicio</h2><span class="badge orange">Docente /
+                  administrador</span>
+              </div>
+              <form id="menu-form"><input type="hidden" id="menu-date" required>
+                <div class="grid grid-2">
+                  <div class="field"><label for="menu-name">Nombre del menú</label><input id="menu-name" required
+                      placeholder="Ej. Arroz con pollo"></div>
+                  <div class="field"><label for="ration-type">Tipo de ración</label><select id="ration-type" required>
+                      <option value="caliente">Comida caliente · plato preparado</option>
+                      <option value="contingencia">Ración de contingencia</option>
+                      <option value="industrializada">Ración industrializada</option>
+                    </select></div>
+                  <div class="field"><label for="menu-total">Gramaje total servido (g)</label><input type="number"
+                      id="menu-total" min="1" step="1" required placeholder="450"><span class="hint">Se divide
+                      automáticamente entre los grados que reciben almuerzo; puedes ajustar cada grado.</span></div>
+                  <div class="field"><label for="window-start">Inicio de ventana</label><input type="time"
+                      id="window-start" value="09:30" required></div>
+                  <div class="field"><label for="window-end">Fin de ventana</label><input type="time" id="window-end"
+                      value="13:00" required></div>
+                </div>
+                <div class="field" style="grid-column:1/-1"><label>Gramaje individual por grupo</label><span
+                    class="hint">Define cuánto recibe cada grupo. Estos valores se usan por separado en el resumen y el
+                    reporte.</span>
+                  <div class="group-grammage-grid">
+                    <div class="field"><label for="group-grams-5-1">Quinto 1 (g)</label><input type="number"
+                        id="group-grams-5-1" min="0" step="1" placeholder="450"></div>
+                    <div class="field"><label for="group-grams-5-2">Quinto 2 (g)</label><input type="number"
+                        id="group-grams-5-2" min="0" step="1" placeholder="450"></div>
+                    <div class="field"><label for="group-grams-5-3">Quinto 3 (g)</label><input type="number"
+                        id="group-grams-5-3" min="0" step="1" placeholder="450"></div>
+                    <div class="field"><label for="group-grams-10-1">10º 1 (g)</label><input type="number"
+                        id="group-grams-10-1" min="0" step="1" placeholder="450"></div>
+                    <div class="field"><label for="group-grams-10-2">10º 2 (g)</label><input type="number"
+                        id="group-grams-10-2" min="0" step="1" placeholder="450"></div>
+                    <div class="field"><label for="group-grams-10-3">10º 3 (g)</label><input type="number"
+                        id="group-grams-10-3" min="0" step="1" placeholder="450"></div>
+                    <div class="field"><label for="group-grams-11-1">11º 1 (g)</label><input type="number"
+                        id="group-grams-11-1" min="0" step="1" placeholder="450"></div>
+                    <div class="field"><label for="group-grams-11-2">11º 2 (g)</label><input type="number"
+                        id="group-grams-11-2" min="0" step="1" placeholder="450"></div>
+                    <div class="field"><label for="group-grams-11-3">11º 3 (g)</label><input type="number"
+                        id="group-grams-11-3" min="0" step="1" placeholder="450"></div>
+                  </div>
+                </div>
+                <div class="toggle-line"><span>Habilitar registro de consumo en este horario</span><label
+                    class="switch"><input type="checkbox" id="registration-enabled" checked><span
+                      class="slider"></span></label></div>
+                <div class="form-actions"><button class="btn btn-primary" type="submit">Guardar
+                    configuración</button><button class="btn btn-outline" type="button" id="clear-menu">Limpiar
+                    formulario</button></div>
+              </form>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Desperdicio del almuerzo</h2><span class="badge orange">Almuerzo</span>
+              </div>
+              <form id="waste-lunch-form" class="waste-form" data-tipo="almuerzo">
+                <div class="grid grid-2">
+                  <div class="field"><label for="waste-lunch-date">Fecha</label><input type="hidden"
+                      id="waste-lunch-date" required></div>
+                  <div class="field"><label for="waste-lunch-weight">Gramaje desperdiciado de almuerzo (g)</label><input
+                      type="number" id="waste-lunch-weight" min="0" step="1" required placeholder="Ej. 1200"></div>
+                </div>
+                <div class="field"><label for="waste-lunch-group">Grado individual del almuerzo</label><select
+                    id="waste-lunch-group" required>
+                    <option value="">Seleccione el grado</option>
+                    <option value="5-1">Quinto 1</option>
+                    <option value="5-2">Quinto 2</option>
+                    <option value="5-3">Quinto 3</option>
+                    <option value="10-1">Décimo 1</option>
+                    <option value="10-2">Décimo 2</option>
+                    <option value="10-3">Décimo 3</option>
+                    <option value="11-1">Once 1</option>
+                    <option value="11-2">Once 2</option>
+                    <option value="11-3">Once 3</option>
+                  </select></div>
+                <div class="field"><label for="waste-lunch-note">Observación</label><textarea id="waste-lunch-note"
+                    placeholder="Describe el sobrante del almuerzo..."></textarea></div><button class="btn btn-orange"
+                  type="submit">Registrar desperdicio de almuerzo</button>
+              </form>
+            </article>
+          </div>
+          <div style="margin-top:16px">
+            <article class="card" style="margin-top:16px">
+              <div class="card-head">
+                <div>
+                  <h2 class="card-title">Registro de proteínas y carbohidratos del almuerzo</h2>
+                  <p class="hint">Solo almuerzo. Registra por grado lo servido de cada componente (proteínas,
+                    carbohidratos, legumbres, ensaladas, frutas, bebidas y otros); el sistema calcula lo entregado en
+                    gramos y kilogramos (bebidas en litros). Alimenta las tablas del resumen y de reportes.</p>
+                </div><span class="badge orange">Almuerzo</span>
+              </div>
+              <form id="pae-delivery-form">
+                <div class="grid grid-2">
+                  <div class="field"><label for="pae-delivery-date">Fecha</label><input type="hidden"
+                      id="pae-delivery-date" required></div>
+                  <div class="field"><label for="pae-delivered-percent">Porcentaje entregado del almuerzo
+                      (%)</label><input type="number" id="pae-delivered-percent" min="0" max="100" step="0.01" required
+                      placeholder="Ej. 100"></div>
+                </div>
+                <div class="card-head" style="margin:6px 0 0">
+                  <h3 class="card-title" style="font-size:14px">Componentes del almuerzo por grado</h3>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-lime" type="button"
+                      id="pae-add-row">+ Agregar</button></div>
+                </div>
+                <div class="table-wrap">
+                  <table class="pae-rows-table">
+                    <thead>
+                      <tr>
+                        <th>Componente</th>
+                        <th>Grado</th>
+                        <th>Alimento</th>
+                        <th>Servido (por ración)</th>
+                        <th>Entregado</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="pae-delivery-rows"></tbody>
+                  </table>
+                </div>
+                <div class="pae-totals" id="pae-delivery-totals"></div>
+                <div class="field"><label for="pae-delivery-note">Observación del almuerzo</label><textarea
+                    id="pae-delivery-note" placeholder="Describe lo servido en el almuerzo..."></textarea></div><button
+                  class="btn btn-lime" type="submit">Guardar registro del almuerzo</button>
+              </form>
+              <div class="table-wrap" style="margin-top:16px">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Componente</th>
+                      <th>Alimento</th>
+                      <th>Servido</th>
+                      <th>Entregado</th>
+                      <th>No entregado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pae-delivery-table">
+                    <tr>
+                      <td colspan="5" class="empty">Aún no hay registro de componentes del almuerzo.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+          <div class="svc-head">
+            <h2>PAE</h2><span>Entrega por grupo y desperdicio del PAE</span>
+          </div>
+          <div class="grid grid-2">
+            <article class="card">
+              <div class="card-head">
+                <div>
+                  <h2 class="card-title">Entrega del PAE</h2>
+                  <p class="hint">Escribe el porcentaje entregado y el gramaje del PAE por grupo (sexto 1 a once 3). El
+                    sistema calcula lo entregado en gramos y kilogramos. Se guarda en MySQL y alimenta el resumen y los
+                    reportes.</p>
+                </div><span class="badge lime">PAE</span>
+              </div>
+              <form id="pae-group-form">
+                <input type="hidden" id="pae-g-date">
+                <div class="grid grid-2">
+                  <div class="field"><label for="pae-g-percent">Porcentaje entregado (%)</label><input type="number"
+                      id="pae-g-percent" min="0" max="100" step="0.01" required placeholder="Ej. 100"></div>
+                  <div class="field"><label for="pae-g-total">Gramaje total del PAE (g) · opcional</label><input
+                      type="number" id="pae-g-total" min="0" step="any" placeholder="Ej. 9000"><span class="hint">Se
+                      divide en partes iguales entre los 18 grupos; puedes ajustar cada uno.</span></div>
+                </div>
+                <div class="field" style="margin-top:6px"><label>Gramaje del PAE por grupo (g)</label>
+                  <div class="group-grammage-grid pae-g-grid" id="pae-g-grid"></div>
+                </div>
+                <div class="pae-totals" id="pae-g-totals"></div>
+                <div class="field"><label for="pae-g-note">Observación de entrega PAE</label><textarea id="pae-g-note"
+                    placeholder="Describe la entrega del PAE..."></textarea></div>
+                <button class="btn btn-lime" type="submit">Guardar entrega PAE</button>
+              </form>
+              <div class="table-wrap" style="margin-top:16px">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Grupo</th>
+                      <th>Servido</th>
+                      <th>Entregado</th>
+                      <th>No entregado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pae-g-table">
+                    <tr>
+                      <td colspan="4" class="empty">Aún no hay entrega PAE registrada.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Desperdicio del PAE</h2>
+              </div>
+              <form id="waste-pae-form" class="waste-form" data-tipo="PAE">
+                <div class="grid grid-2">
+                  <div class="field"><label for="waste-pae-date">Fecha</label><input type="hidden" id="waste-pae-date"
+                      required></div>
+                  <div class="field"><label for="waste-pae-weight">Gramaje desperdiciado del PAE (g)</label><input
+                      type="number" id="waste-pae-weight" min="0" step="1" required placeholder="Ej. 3500"></div>
+                </div>
+                <div class="field"><label for="waste-pae-group">Grado individual del PAE</label><select
+                    id="waste-pae-group" required>
+                    <option value="">Seleccione el grado</option>
+                    <option value="6-1">Sexto 1</option>
+                    <option value="6-2">Sexto 2</option>
+                    <option value="6-3">Sexto 3</option>
+                    <option value="7-1">Séptimo 1</option>
+                    <option value="7-2">Séptimo 2</option>
+                    <option value="7-3">Séptimo 3</option>
+                    <option value="8-1">Octavo 1</option>
+                    <option value="8-2">Octavo 2</option>
+                    <option value="8-3">Octavo 3</option>
+                    <option value="9-1">Noveno 1</option>
+                    <option value="9-2">Noveno 2</option>
+                    <option value="9-3">Noveno 3</option>
+                    <option value="10-1">Décimo 1</option>
+                    <option value="10-2">Décimo 2</option>
+                    <option value="10-3">Décimo 3</option>
+                    <option value="11-1">Once 1</option>
+                    <option value="11-2">Once 2</option>
+                    <option value="11-3">Once 3</option>
+                  </select></div>
+                <div class="field"><label for="waste-pae-note">Observación</label><textarea id="waste-pae-note"
+                    placeholder="Describe el sobrante del PAE..."></textarea></div><button class="btn btn-primary"
+                  type="submit">Registrar desperdicio del PAE</button>
+              </form>
+            </article>
+          </div>
+        </section>
+        <section class="panel" data-panel-view="registro">
+          <div class="heading-row">
+            <div>
+              <p class="eyebrow">Padrón maestro</p>
+              <h1 class="page-title">Registro de estudiantes</h1>
+              <p class="page-subtitle">Registra estudiantes por documento y administra sus datos desde cada carpeta.</p>
+            </div>
+            <div class="date-context">Fecha global seleccionada arriba</div>
+          </div>
+          <div class="grid grid-2">
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Registrar estudiante</h2><span class="badge orange">Base de control</span>
+              </div>
+              <form id="master-form">
+                <div class="field"><label for="master-name">Nombre</label><input id="master-name" required
+                    pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" placeholder="Nombre completo"></div>
+                <div class="field"><label for="master-document">Número de documento</label><input id="master-document"
+                    required inputmode="numeric" pattern="[0-9]+" oninput="this.value=this.value.replace(/\D/g,'')"
+                    placeholder="Solo números"></div>
+                <div class="field"><label for="master-alimentation">Servicio</label><select id="master-alimentation"
+                    required>
+                    <option value="PAE">PAE · séptimo, octavo y noveno</option>
+                    <option value="almuerzo">Almuerzo · quinto, décimo y once</option>
+                  </select></div>
+                <div class="field"><label for="master-grade">Grado / carpeta</label><select id="master-grade" required>
+                    <option value="">Seleccione el grado</option>
+                    <option value="11-1">11-1</option>
+                    <option value="11-2">11-2</option>
+                    <option value="11-3">11-3</option>
+                    <option value="10-1">10-1</option>
+                    <option value="10-2">10-2</option>
+                    <option value="10-3">10-3</option>
+                    <option value="9-1">9-1</option>
+                    <option value="9-2">9-2</option>
+                    <option value="9-3">9-3</option>
+                    <option value="8-1">8-1</option>
+                    <option value="8-2">8-2</option>
+                    <option value="8-3">8-3</option>
+                    <option value="7-1">7-1</option>
+                    <option value="7-2">7-2</option>
+                    <option value="7-3">7-3</option>
+                    <option value="5-1">Quinto 1</option>
+                    <option value="5-2">Quinto 2</option>
+                    <option value="5-3">Quinto 3</option>
+                  </select></div><button class="btn btn-primary" type="submit">Registrar estudiante</button>
+              </form>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Carpetas por grado</h2><span class="badge" id="master-count">0 estudiantes</span>
+              </div>
+              <div class="grade-folders" id="grade-folders"></div>
+              <div id="folder-lists"></div>
+            </article>
+          </div>
+        </section>
+        <section class="panel" data-panel-view="estudiantes">
+          <div class="heading-row">
+            <div>
+              <p class="eyebrow">Seguimiento diario</p>
+              <h1 class="page-title">Control de estudiantes</h1>
+              <p class="page-subtitle">Elige una carpeta para consultar el estado de hoy de los estudiantes de ese
+                grado.</p>
+            </div>
+            <div class="date-context">Fecha global seleccionada arriba</div>
+          </div>
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2 class="card-title">Carpetas por grado</h2>
+                <p class="hint">Cada carpeta contiene la tabla de estado correspondiente a su grado.</p>
+              </div><span class="badge" id="student-count">0 estudiantes</span>
+            </div>
+            <div class="grade-folders" id="control-grade-folders"></div>
+            <div id="control-folder-lists"></div>
+          </article>
+        </section>
+        <section class="panel" data-panel-view="reportes">
+          <div class="heading-row">
+            <div>
+              <p class="eyebrow">Decisiones basadas en evidencia</p>
+              <h1 class="page-title">Reportes de consumo</h1>
+              <p class="page-subtitle">Consulta el día seleccionado arriba y filtra por grupo para detectar aceptación y
+                oportunidades de mejora.</p>
+            </div>
+            <div class="report-toolbar">
+              <div class="report-date-readout">Reporte del día: <b id="report-date-label">—</b></div>
+              <div class="field"><label for="report-grade">Grupo / grado</label><select id="report-grade">
+                  <option value="">Todos los grupos</option>
+                  <option value="5-1">5º1</option>
+                  <option value="5-2">5º2</option>
+                  <option value="5-3">5º3</option>
+                  <option value="6-1">6º1</option>
+                  <option value="6-2">6º2</option>
+                  <option value="6-3">6º3</option>
+                  <option value="7-1">7º1</option>
+                  <option value="7-2">7º2</option>
+                  <option value="7-3">7º3</option>
+                  <option value="8-1">8º1</option>
+                  <option value="8-2">8º2</option>
+                  <option value="8-3">8º3</option>
+                  <option value="9-1">9º1</option>
+                  <option value="9-2">9º2</option>
+                  <option value="9-3">9º3</option>
+                  <option value="10-1">10º1</option>
+                  <option value="10-2">10º2</option>
+                  <option value="10-3">10º3</option>
+                  <option value="11-1">11º1</option>
+                  <option value="11-2">11º2</option>
+                  <option value="11-3">11º3</option>
+                </select></div><button class="btn btn-primary" id="apply-report">Aplicar</button>
+            </div>
+          </div>
+          <div class="grid grid-4">
+            <article class="card stat red">
+              <div class="stat-label">Desperdicio total</div>
+              <div class="stat-value" id="report-total-waste">0 g</div>
+              <div class="stat-note">Suma de los registros por grado</div>
+            </article>
+            <article class="card stat lime">
+              <div class="stat-label">PAE entregado</div>
+              <div class="stat-value" id="report-pae-delivered">—</div>
+              <div class="stat-note">Porcentaje registrado para la fecha</div>
+            </article>
+            <article class="card stat">
+              <div class="stat-label">Servido total</div>
+              <div class="stat-value" id="report-served">0 g</div>
+              <div class="stat-note">Consumos × gramaje (g y kg)</div>
+            </article>
+            <article class="card stat orange">
+              <div class="stat-label">Pérdida diaria</div>
+              <div class="stat-value" id="report-waste-percent">0.0%</div>
+              <div class="stat-note">Desperdicio ÷ servido × 100</div>
+            </article>
+          </div>
+          <div class="grid grid-2" style="margin-top:16px">
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Desperdicio por grado</h2><span class="badge gray">g y kg</span>
+              </div>
+              <div class="canvas-wrap"><canvas id="waste-chart"></canvas></div>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Detalle de registros</h2>
+              </div>
+              <div class="table-wrap report-table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Servicio</th>
+                      <th>Grupo</th>
+                      <th>Menú / componentes</th>
+                      <th>Proteínas</th>
+                      <th>Carbohidratos</th>
+                      <th>Legumbres</th>
+                      <th>Ensaladas</th>
+                      <th>Frutas</th>
+                      <th>Bebidas (L)</th>
+                      <th>Otros</th>
+                      <th>Gramaje grupo</th>
+                      <th>Observaciones</th>
+                      <th>Entrega</th>
+                      <th>Consumos</th>
+                      <th>Servido</th>
+                      <th>Desperdicio</th>
+                      <th>% pérdida</th>
+                    </tr>
+                  </thead>
+                  <tbody id="report-table"></tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+          <div class="statistics-grid" style="margin-top:16px">
+            <article class="card">
+              <div class="card-head">
+                <div>
+                  <h2 class="card-title">PAE · Estadística del desperdicio</h2>
+                  <p class="hint">Moda, mediana y promedio del desperdicio en gramos, calculados por grado únicamente
+                    para el PAE y según el filtro del reporte.</p>
+                </div><span class="badge lime">PAE · g</span>
+              </div>
+              <div class="table-wrap">
+                <table class="statistics-table">
+                  <thead>
+                    <tr>
+                      <th>Indicador</th>
+                      <th>Desperdicio (g)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="report-pae-statistics-body"></tbody>
+                </table>
+              </div>
+              <div class="statistics-chart"><canvas id="report-pae-statistics-chart"></canvas></div>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <div>
+                  <h2 class="card-title">Almuerzo · Estadística del desperdicio</h2>
+                  <p class="hint">Moda, mediana y promedio del desperdicio en gramos, calculados por grado únicamente
+                    para el almuerzo y según el filtro del reporte.</p>
+                </div><span class="badge orange">Almuerzo · g</span>
+              </div>
+              <div class="table-wrap">
+                <table class="statistics-table">
+                  <thead>
+                    <tr>
+                      <th>Indicador</th>
+                      <th>Desperdicio (g)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="report-lunch-statistics-body"></tbody>
+                </table>
+              </div>
+              <div class="statistics-chart"><canvas id="report-lunch-statistics-chart"></canvas></div>
+            </article>
+          </div>
+          <div class="grid grid-2" style="margin-top:16px">
+            <article class="card" style="grid-column:1/-1">
+              <div class="card-head">
+                <div>
+                  <h2 class="card-title">Almuerzo y PAE: servido, desperdicio y entrega</h2>
+                  <p class="hint">Organizado por servicio. Almuerzo: proteínas, carbohidratos, legumbres, ensaladas,
+                    frutas, bebidas y otros por grado (registro del almuerzo). PAE: gramaje servido por grupo,
+                    desperdicio y porcentaje entregado.</p>
+                </div><span class="badge">g y kg</span>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table relation-table">
+                  <thead>
+                    <tr>
+                      <th>Servicio</th>
+                      <th>Grado</th>
+                      <th>Proteínas<br><small>por ración</small></th>
+                      <th>Carbohidratos<br><small>por ración</small></th>
+                      <th>Legumbres</th>
+                      <th>Ensaladas</th>
+                      <th>Frutas</th>
+                      <th>Bebidas<br><small>litros</small></th>
+                      <th>Otros</th>
+                      <th>Servido</th>
+                      <th>Desperdicio</th>
+                      <th>% pérdida</th>
+                      <th>Entrega<br><small>almuerzo / PAE</small></th>
+                    </tr>
+                  </thead>
+                  <tbody id="report-relation-body"></tbody>
+                </table>
+              </div>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Observaciones</h2>
+              </div><b>Almuerzo</b>
+              <div class="obs-box" id="report-obs-lunch"></div><b style="display:block;margin-top:10px">PAE</b>
+              <div class="obs-box" id="report-obs-pae"></div>
+            </article>
+          </div>
+          <div class="grid grid-2" style="margin-top:16px">
+            <article class="card" style="grid-column:1/-1">
+              <div class="card-head">
+                <div>
+                  <h2 class="card-title">Entrega del PAE por grupo</h2>
+                  <p class="hint">Gramaje servido, entregado y no entregado de cada grupo (sexto 1 a once 3).</p>
+                </div><span class="badge lime">PAE · g y kg</span>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Grupo</th>
+                      <th>Servido</th>
+                      <th>Entregado</th>
+                      <th>No entregado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pae-g-body-r">
+                    <tr>
+                      <td colspan="4" class="empty">Aún no hay entrega PAE registrada.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="obs-box" id="pae-g-obs-r" style="margin-top:12px"></div>
+            </article>
+          </div>
+          <div class="grid grid-2" style="margin-top:16px">
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Almuerzo · servido y entregado por componente</h2><span class="badge lime">kg ·
+                  L</span>
+              </div>
+              <div class="carb-wrap"><canvas id="pae-chart-r"></canvas></div>
+              <div class="empty" id="pae-chart-r-empty" style="display:none"></div>
+              <p class="footer-note" id="pae-chart-note-r"></p>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h2 class="card-title">Almuerzo · componentes servidos y entregados</h2><span class="badge">g · kg ·
+                  L</span>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Componente</th>
+                      <th>Alimento</th>
+                      <th>Servido</th>
+                      <th>Entregado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pae-comp-body-r"></tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+          <p class="footer-note">Los reportes de directivos y directores de grupo muestran solo información agregada; el
+            rol estudiante únicamente puede confirmar su propio consumo.</p>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script>
+    // Mantiene todos los paneles y el resumen dentro de main; evita filas vacías cuando el navegador corrige HTML antiguo.
+    (() => { const main = document.querySelector('main'), first = document.querySelector('[data-panel-view="inicio"]'); if (!main || !first) return; const shell = document.querySelector('.shell');[...shell.children].filter(el => el.matches(':scope > .grid')).forEach(el => first.appendChild(el)); document.querySelectorAll('[data-panel-view]').forEach(panel => { if (panel.parentElement !== main) main.appendChild(panel) }) })();
+    const today = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` })();
+    const seedStudents = []; const LUNCH_GROUPS = ["5-1", "5-2", "5-3", "10-1", "10-2", "10-3", "11-1", "11-2", "11-3"]; const PAE_GROUPS = ["6-1", "6-2", "6-3", "7-1", "7-2", "7-3", "8-1", "8-2", "8-3", "9-1", "9-2", "9-3"]; const REPORT_GROUPS = [...LUNCH_GROUPS, ...PAE_GROUPS]; const GROUP_NAMES = { "5-1": "Quinto 1", "5-2": "Quinto 2", "5-3": "Quinto 3", "6-1": "Sexto 1", "6-2": "Sexto 2", "6-3": "Sexto 3", "7-1": "Séptimo 1", "7-2": "Séptimo 2", "7-3": "Séptimo 3", "8-1": "Octavo 1", "8-2": "Octavo 2", "8-3": "Octavo 3", "9-1": "Noveno 1", "9-2": "Noveno 2", "9-3": "Noveno 3", "10-1": "Décimo 1", "10-2": "Décimo 2", "10-3": "Décimo 3", "11-1": "Once 1", "11-2": "Once 2", "11-3": "Once 3" }; const GRADES_BY_SERVICE = { almuerzo: LUNCH_GROUPS, PAE: PAE_GROUPS };
+    const defaultMenu = { fecha: today, nombre_menu: 'Arroz con pollo y ensalada', tipo_racion: 'caliente', gramaje_total: 450, ventana_inicio: '09:30', ventana_fin: '13:00', registro_habilitado: true, notas: '', componentes: [{ componente: 'proteína', alimento: 'Pollo guisado', gramos: 120, es_opcional: false }, { componente: 'carbohidrato', alimento: 'Arroz', gramos: 180, es_opcional: false }, { componente: 'ensalada', alimento: 'Ensalada fresca', gramos: 80, es_opcional: false }, { componente: 'bebida', alimento: 'Jugo natural', gramos: 70, es_opcional: false }] };
+    defaultMenu.gramajes_grupo = Object.fromEntries(REPORT_GROUPS.map(g => [g, defaultMenu.gramaje_total]));
+    let store = JSON.parse(localStorage.getItem('ac-store-v4') || 'null') || { students: seedStudents, menus: { [today]: defaultMenu }, consumos: {}, desperdicios: {}, pae_entregas: {}, componentes_pae: {}, historial: [], control: {} }; let chart = null, summaryPaeStatsChart = null, summaryLunchStatsChart = null, reportPaeStatsChart = null, reportLunchStatsChart = null, scanner = null, activeMethod = 'qr'; const $ = id => document.getElementById(id), money = n => `${Math.round(Number(n) || 0).toLocaleString('es-CO')} g`, pct = n => `${(Number(n) || 0).toFixed(1)}%`;
+    function persist() { localStorage.setItem('ac-store-v4', JSON.stringify(store)) } function setGradeOptions(service, selectId, includeAll = false) { const el = $(selectId); if (!el) return; const current = el.value; const values = includeAll ? REPORT_GROUPS : (GRADES_BY_SERVICE[service] || PAE_GROUPS); el.innerHTML = (includeAll ? '<option value="">Todos los grupos</option>' : '<option value="">Seleccione el grado</option>') + values.map(g => `<option value="${g}">${GROUP_NAMES[g]}</option>`).join(''); if (values.includes(current)) el.value = current } function getWasteEntries(date, tipo) { const value = store.desperdicios?.[date]?.[tipo]; if (Array.isArray(value)) return value; return value && typeof value === 'object' ? [value] : [] } function recordService(r) { return r.tipo_alimentacion || ((LUNCH_GROUPS.includes(r.grado)) ? 'almuerzo' : 'PAE') } function wasteForGroup(date, tipo, grado, servedByGroup = 0, totalServed = 0) { const entries = getWasteEntries(date, tipo); let exact = entries.filter(x => x.grado === grado).reduce((n, x) => n + Number(x.peso || 0), 0); let general = entries.filter(x => !x.grado).reduce((n, x) => n + Number(x.peso || 0), 0); return exact + (totalServed && servedByGroup ? general * servedByGroup / totalServed : 0) } function safe(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c])) } function showNotice(message, type = 'success', target = 'notice') { const el = $(target); if (!el) return; el.textContent = message; el.className = `notice show ${type}`; clearTimeout(el._timer); el._timer = setTimeout(() => el.className = 'notice', 4500) } async function api(path, options = {}) { try { const res = await fetch(path, { headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }, ...options }); const data = await res.json(); if (res.status === 401 && data && data.autenticado === false) { window.location.replace('index1.html'); return { ok: false, data } } return { ok: res.ok && data.ok !== false, data } } catch (e) { return { ok: false, offline: true } } } function setDateInputs(date = today) { $('global-date').value = date;['dashboard-date', 'menu-date', 'waste-lunch-date', 'waste-pae-date', 'pae-component-date', 'pae-delivery-date', 'pae-g-date', 'report-from', 'report-to', 'control-date', 'registro-date', 'consumption-date'].forEach(id => { if ($(id)) $(id).value = date }); if ($('report-date-label')) $('report-date-label').textContent = date } function isWeekday(date) { const day = new Date(`${date}T12:00:00`).getDay(); return day > 0 && day < 6 } function menuFor(date) { return store.menus[date] || null } function groupType(grade) { return /^(1|2|3|4|5)(-|$)/.test(String(grade)) ? 'primaria' : /^(10|11)(-|$)/.test(String(grade)) ? 'superior' : 'otro' } function menuLabel(type) { return ({ caliente: 'Comida caliente', contingencia: 'Ración de contingencia', industrializada: 'Ración industrializada' })[type] || type } function getDayData(date) { const menu = menuFor(date), records = store.consumos[date] || [], grams = groupGramajes(menu || {}), paeRecords = records.filter(r => recordService(r) === 'PAE'), lunchRecords = records.filter(r => recordService(r) === 'almuerzo'), paeServed = paeRecords.reduce((n, r) => n + (Number(grams[r.grado]) || Number(menu?.gramaje_total) || 0), 0), lunchServed = lunchRecords.reduce((n, r) => n + (Number(grams[r.grado]) || Number(menu?.gramaje_total) || 0), 0), paeWaste = getWasteEntries(date, 'PAE').reduce((n, x) => n + Number(x.peso || 0), 0), lunchWaste = getWasteEntries(date, 'almuerzo').reduce((n, x) => n + Number(x.peso || 0), 0), waste = paeWaste + lunchWaste, lunchAssigned = menu?.nombre_menu ? LUNCH_GROUPS.reduce((n, g) => n + (Number(grams[g]) || 0), 0) : 0, lunchServedTotal = lunchAssigned || lunchServed, served = lunchServedTotal + paeServed; return { menu, records, waste, served, paeRecords, lunchRecords, paeServed, lunchServed: lunchServedTotal, paeWaste, lunchWaste, effective: Math.max(0, served - waste), loss: served ? Math.min(100, waste / served * 100) : 0 } }
+    function kgs(n) { return `${(Number(n) || 0).toLocaleString('es-CO', { maximumFractionDigits: 2 })} kg` } function gk(n) { return `${money(n)} · ${kgs((Number(n) || 0) / 1000)}` } function fmtKg(n) { return (Number(n) || 0).toLocaleString('es-CO', { maximumFractionDigits: 3 }) } function groupGramajes(menu) { let configured = menu?.gramajes_grupo || {}; if (typeof configured === 'string') { try { configured = JSON.parse(configured) } catch (e) { configured = {} } } return Object.fromEntries(REPORT_GROUPS.map(g => [g, Number(configured[g] ?? menu?.gramaje_total ?? 0)])) } function componentStats(menu, grado = '') { const components = (menu?.componentes || []).filter(c => (!grado || !c.grado || c.grado === grado) && (c.unidad || unitOfKind(c.componente)) !== 'L'); const protein = components.filter(c => String(c.componente).toLowerCase().includes('prote')).reduce((n, c) => n + Number(c.gramos || 0), 0); const carbs = components.filter(c => String(c.componente).toLowerCase().includes('carbo')).reduce((n, c) => n + Number(c.gramos || 0), 0); return { protein, carbs, proteinDetails: components.filter(c => String(c.componente).toLowerCase().includes('prote')).map(c => `${c.alimento || c.componente} (${money(c.gramos)})`).join(' · '), carbDetails: components.filter(c => String(c.componente).toLowerCase().includes('carbo')).map(c => `${c.alimento || c.componente} (${money(c.gramos)})`).join(' · ') } } function renderGroupSummary(date, d) { const grams = groupGramajes(d.menu || {}); $('today-group-grammages').textContent = REPORT_GROUPS.map(g => { const tipo = LUNCH_GROUPS.includes(g) ? 'almuerzo' : 'PAE'; const waste = ['PAE', 'almuerzo'].flatMap(tipo => getWasteEntries(date, tipo).filter(x => x.grado === g)).reduce((n, x) => n + Number(x.peso || 0), 0); return `${GROUP_NAMES[g]}: servido ${gk(grams[g])} · desperdicio ${gk(waste)}` }).join(' | ') } function renderDashboard() { const date = $('global-date').value || today; setDateInputs(date); const d = getDayData(date); $('pae-served-grams').textContent = gk(d.paeServed); $('pae-waste-grams').textContent = gk(d.paeWaste); $('pae-consumed-grams').textContent = gk(Math.max(d.paeServed - d.paeWaste, 0)); $('stat-servido').textContent = gk(d.served); $('stat-desperdicio').textContent = gk(d.waste); $('stat-efectivo').textContent = gk(d.effective); $('stat-desperdicio-note').textContent = d.served ? 'Suma de registros por grado' : 'Sin pesaje todavía'; $('stat-desperdicio-percent').textContent = `Pérdida diaria: ${d.loss.toFixed(1)}%`; $('stat-efectivo-note').textContent = d.served ? 'Servido menos desperdicio' : 'Aún sin datos del día'; $('component-date-label').textContent = date === today ? 'hoy' : date; const m = d.menu || {}; $('today-menu-name').textContent = m.nombre_menu || 'Configura el menú del día'; $('today-menu-grams').textContent = money(m.gramaje_total); $('today-menu-window').textContent = `${m.ventana_inicio || '09:30'} — ${m.ventana_fin || '13:00'}`; $('today-menu-type').textContent = menuLabel(m.tipo_racion || 'caliente'); const stats = componentStats(m); $('today-proteins').textContent = stats.protein ? `${money(stats.protein)}${stats.proteinDetails ? ' · ' + stats.proteinDetails : ''}` : 'Sin registrar'; $('today-carbs').textContent = stats.carbs ? `${money(stats.carbs)}${stats.carbDetails ? ' · ' + stats.carbDetails : ''}` : 'Sin registrar'; renderGroupSummary(date, d); $('today-menu-notes').textContent = m.notas || 'Sin observaciones registradas.'; const delivery = paeGroupsData(date).v, deliveryText = delivery ? `PAE entregado: ${Number(delivery.porcentaje_entregado).toFixed(2)}%` : ''; const deliveredNotes = [m.notas, delivery?.observacion].filter(Boolean); const wasteNotes = ['almuerzo', 'PAE'].flatMap(tipo => getWasteEntries(date, tipo).filter(x => x.nota).map(x => `${tipo} · ${GROUP_NAMES[x.grado] || x.grado || 'General'}: ${x.nota}`)); $('today-waste-observations').innerHTML = (deliveryText ? `<b>${deliveryText}</b><br>` : '') + `<b>OBSERVACIONES DE LO ENTREGADO / MENÚ Y GRAMAJE</b><div>${deliveredNotes.length ? deliveredNotes.map(safe).join('<br>') : 'Sin observaciones de entrega para esta fecha.'}</div><hr style="border:0;border-top:1px solid var(--line);margin:8px 0"><b>OBSERVACIONES DEL DESPERDICIO</b><div>${wasteNotes.length ? wasteNotes.map(safe).join('<br>') : 'Sin observaciones de desperdicio para esta fecha.'}</div>`; $('today-components').innerHTML = (m.componentes || []).length ? m.componentes.map(c => `<tr><td><span class="badge gray">${safe(c.componente)}</span></td><td>${safe(c.alimento)}${c.grado ? ` · ${safe(GROUP_NAMES[c.grado] || c.grado)}` : ''}${c.es_opcional ? '<span class="badge orange" style="margin-left:5px">opcional</span>' : ''}</td><td><b>${qtyText(c.gramos, c.unidad || unitOfKind(c.componente))}</b></td></tr>`).join('') : '<tr><td colspan="3" class="empty">No hay componentes configurados para esta fecha.</td></tr>'; const groupGrams = groupGramajes(m); const wasteByGrade = REPORT_GROUPS.map(g => { const w = ['PAE', 'almuerzo'].flatMap(tipo => getWasteEntries(date, tipo).filter(x => x.grado === g)).reduce((n, x) => n + Number(x.peso || 0), 0); return { g, w } }); const maxWaste = Math.max(...wasteByGrade.map(x => x.w), 1); $('level-bars').innerHTML = wasteByGrade.map(x => `<div class="bar-row"><span>${GROUP_NAMES[x.g]}</span><div class="bar-track"><div class="bar-fill ${x.w > 0 ? 'orange' : ''}" style="width:${x.w / maxWaste * 100}%"></div></div><b>${gk(x.w)}</b></div>`).join(''); renderPaeDelivery(date) }
+    const PAE_ENTREGA_GROUPS = [6, 7, 8, 9, 10, 11].flatMap(n => [1, 2, 3].map(x => `${n}-${x}`)); (store.pae_grupos ??= {});
+    function wasteType(date, tipo, g) { return getWasteEntries(date, tipo).filter(x => x.grado === g).reduce((n, x) => n + Number(x.peso || 0), 0) }
+    // Registro de proteínas y carbohidratos del almuerzo (porcentaje + componentes)
+    function paeData(date) { const v = paeDeliveryFor(date), pct = Number(v?.porcentaje_entregado) || 0, list = (v?.componentes || []).map(c => ({ ...c, unidad: c.unidad || unitOfKind(c.componente), servido: Number(c.servido) || 0, entregado: (c.entregado != null && c.entregado !== '') ? Number(c.entregado) : (Number(c.servido) || 0) * pct / 100 })); return { v, pct, list, has: list.length > 0, sum: paeSummary(list, pct) } }
+    // Entrega del PAE por grupo (sexto 1 a once 3): porcentaje, gramaje servido y entregado
+    function paeGroupsData(date) { const v = store.pae_grupos?.[date] || null, pct = Number(v?.porcentaje_entregado) || 0, list = (v?.grupos || []).map(x => { const sv = Number(x.servido) || 0; return { g: x.grado, servido: sv, entregado: (x.entregado != null && x.entregado !== '') ? Number(x.entregado) : sv * pct / 100 } }), map = Object.fromEntries(list.map(x => [x.g, x])), sg = list.reduce((n, x) => n + x.servido, 0), eg = list.reduce((n, x) => n + x.entregado, 0); return { v, pct, list, map, has: sg > 0, sg, eg } }
+    // Grupos del PAE del día: los 18 de la entrega + cualquier otro grado con desperdicio PAE (p. ej. quinto desde el QR)
+    function paeGroupsList(date) { return [...new Set([...PAE_ENTREGA_GROUPS, ...REPORT_GROUPS.filter(g => wasteType(date, 'PAE', g) > 0)])] }
+    // Totales por tipo de componente (proteínas, carbohidratos, legumbres, ensaladas, frutas, bebidas en L y otros)
+    function kindTotals(menu, g) { const out = { 'proteína': 0, carbohidrato: 0, legumbre: 0, ensalada: 0, fruta: 0, bebida: 0, otros: 0 }; (menu?.componentes || []).filter(c => !g || !c.grado || c.grado === g).forEach(c => { let k = String(c.componente || 'otros').toLowerCase(); k = k.startsWith('prote') ? 'proteína' : k.startsWith('carbo') ? 'carbohidrato' : k; if (!(k in out)) k = 'otros'; out[k] += Number(c.gramos) || 0 }); return out }
+    function kindCells(r) { const k = r.kinds; if (!k) return '<td>—</td>'.repeat(7); const g = v => `<td>${v > 0 ? gk(v) : '—'}</td>`; return g(k['proteína']) + g(k.carbohidrato) + g(k.legumbre) + g(k.ensalada) + g(k.fruta) + `<td>${k.bebida > 0 ? fmtL(k.bebida) + ' L' : '—'}</td>` + g(k.otros) }
+    // Los componentes del almuerzo salen del "Registro de proteínas y carbohidratos del almuerzo"
+    function lunchRegistryComps(date) { return (store.pae_entregas?.[date]?.componentes || []).map(c => ({ componente: c.componente, alimento: c.alimento, gramos: Number(c.servido) || 0, unidad: c.unidad || unitOfKind(c.componente), grado: c.grado || '', es_opcional: false })) }
+    const _menuFor0 = menuFor; menuFor = function (date) { const m = _menuFor0(date), rc = lunchRegistryComps(date); return (m && rc.length) ? { ...m, componentes: rc } : m };
+
+    function consumoLabel(t) { return ({ ninguno: 'No consumió', vaso_leche: 'Vaso de leche', almuerzo: 'Almuerzo' })[t] || 'No consumió' }
+    function renderStudents() { const date = $('registro-date')?.value || $('control-date')?.value || today, control = store.control?.[date] || [], masters = store.students || [], grades = REPORT_GROUPS; const registryNames = GROUP_NAMES; $('master-count').textContent = `${masters.length} estudiante${masters.length === 1 ? '' : 's'}`; $('grade-folders').innerHTML = grades.map(g => `<button type="button" class="grade-folder" data-grade-folder="${g}">📁 ${registryNames[g]} <span class="badge gray">${masters.filter(x => x.grado === g).length}</span></button>`).join(''); $('folder-lists').innerHTML = grades.map(g => { const list = masters.filter(x => x.grado === g); const rows = list.map(st => { const c = control.find(x => x.id === st.id || x.documento === st.documento); const ok = c && c.estado !== 'no_consumio'; const hora = ok ? (c.hora || '—') : ''; return `<tr><td><b>${safe(st.nombre)}</b></td><td>${safe(st.documento || '')}</td><td><span class="status-dot ${ok ? 'green' : ''}"></span>${ok ? `Activo · Sí se registró · ${safe(hora.slice ? hora.slice(0, 5) : hora)}` : 'No se ha registrado'}</td><td class="student-actions"><button type="button" class="mini-action btn-edit-student" data-student-id="${st.id}">Editar</button><button type="button" class="mini-action btn-delete-student" data-student-id="${st.id}" data-student-name="${safe(st.nombre)}">Borrar</button></td></tr>` }).join(''); return `<div class="folder-list" data-folder-list="${g}"><div class="card-head"><h3 class="card-title">${registryNames[g]}</h3><span class="badge orange">${list.length} estudiante${list.length === 1 ? '' : 's'}</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Nombre</th><th>Documento</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${rows || '<tr><td colspan="4" class="empty">Carpeta vacía.</td></tr>'}</tbody></table></div></div>` }).join(''); $('student-count').textContent = `${control.length} estudiante${control.length === 1 ? '' : 's'}`; $('control-grade-folders').innerHTML = grades.map(g => { const count = control.filter(c => c.grado === g).length; return `<button type="button" class="grade-folder control-grade-folder" data-control-grade-folder="${g}">📁 ${registryNames[g]} <span class="badge gray">${count}</span></button>` }).join(''); $('control-folder-lists').innerHTML = grades.map(g => { const list = control.filter(c => c.grado === g); const rows = list.map(c => `<tr><td><b>${safe(c.nombre)}</b><br><small>${safe(c.documento || '')}</small></td><td><span class="status-dot ${c.estado === 'no_consumio' ? '' : 'green'}"></span><span class="badge ${c.estado === 'no_consumio' ? 'gray' : ''}">${c.estado === 'no_consumio' ? 'No registrado' : 'Activo · Sí se registró'}</span></td><td>${safe(consumoLabel(c.tipo_consumo || 'ninguno'))}</td><td>${safe(c.fecha || date)}</td><td><b>${safe(c.hora || '—')}</b></td><td class="student-actions"><button type="button" class="mini-action btn-edit-student" data-student-id="${c.id}">Editar</button><button type="button" class="mini-action btn-delete-student" data-student-id="${c.id}" data-student-name="${safe(c.nombre)}">Borrar</button></td></tr>`).join(''); return `<div class="folder-list control-folder-list" data-control-folder-list="${g}"><div class="card-head"><h3 class="card-title">${registryNames[g]} · Estado de hoy</h3><span class="badge orange">${list.length} estudiante${list.length === 1 ? '' : 's'}</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Estudiante</th><th>Estado</th><th>Servicio</th><th>Fecha</th><th>Hora</th><th>Acciones</th></tr></thead><tbody>${rows || '<tr><td colspan="6" class="empty">No hay estudiantes en esta carpeta.</td></tr>'}</tbody></table></div></div>` }).join(''); const history = (store.historial || []).map(h => `<tr><td><b>${safe(h.nombre_estudiante || h.nombre)}</b></td><td>${safe(h.grado || '—')}</td><td><span class="badge gray">No consumió</span></td><td>${safe(consumoLabel(h.tipo_consumo || 'ninguno'))}</td><td>${safe(h.fecha_consumo || '—')}</td><td>${safe(h.hora_consumo || '—')}</td></tr>`).join(''); $('history-table').innerHTML = history || '<tr><td colspan="6" class="empty">Aún no hay cierres de 24 horas.</td></tr>' }
+    async function loadControl(date = $('registro-date')?.value || $('control-date')?.value || today) { const remote = await api(`/api/control-estudiantes?fecha=${date}`); if (remote.ok && Array.isArray(remote.data.data)) { store.control ??= {}; store.control[date] = remote.data.data; persist() } else { store.control ??= {}; const previo = store.control[date] || []; store.control[date] = (store.students || []).map(s => { const local = previo.find(x => x.documento === s.documento || x.id === s.id); return (local && local.estado !== 'no_consumio') ? { ...local, nombre: s.nombre, grado: s.grado, documento: s.documento } : { id: s.id, nombre: s.nombre, documento: s.documento, grado: s.grado, fecha: date, tipo_consumo: 'ninguno', estado: 'no_consumio' } }); persist() } renderStudents() }
+    async function saveMaster(e) { e.preventDefault(); const nombre = $('master-name').value.trim(), documento = $('master-document').value.trim(), grado = $('master-grade').value, tipo_alimentacion = $('master-alimentation').value; if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+$/.test(nombre)) return showNotice('El nombre debe contener solo letras y espacios.', 'error'); if (!/^\d+$/.test(documento)) return showNotice('El documento debe contener solo números.', 'error'); if (!grado) return showNotice('Seleccione un grado.', 'error'); if ((store.students || []).some(x => x.documento === documento)) return showNotice('Ese documento ya está registrado.', 'error'); const remote = await api('/api/registro-estudiantes', { method: 'POST', body: JSON.stringify({ nombre, documento, grado, tipo_alimentacion }) }); let student; if (remote.ok) { student = { ...remote.data.data, tipo_consumo: 'ninguno' }; showNotice(`${nombre} quedó guardado en ${grado} y en la base de datos.`, 'success') } else { student = { id: `local-${Date.now()}`, nombre, documento, grado, tipo_consumo: 'ninguno', local: true }; showNotice(`${nombre} quedó guardado en la carpeta ${grado}. La base de datos no respondió; se conservará en este navegador.`, 'info') } store.students = [...(store.students || []), student]; persist(); $('master-form').reset(); renderStudents(); if (remote.ok) await loadControl() }
+    async function editStudent(button) { const student = (store.students || []).find(s => String(s.id) === String(button.dataset.studentId)); if (!student) return; const nombre = window.prompt('Nombre del estudiante:', student.nombre); if (nombre === null) return; const documento = window.prompt('Número de documento (solo números):', student.documento); if (documento === null) return; const grado = window.prompt('Grado:', student.grado); if (grado === null) return; if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+$/.test(nombre.trim()) || !/^\d+$/.test(documento.trim())) return showNotice('Nombre o documento inválido.', 'error'); const remote = student.local ? { ok: false } : await api(`/api/estudiantes/${student.id}`, { method: 'PUT', body: JSON.stringify({ nombre: nombre.trim(), documento: documento.trim(), edad: student.edad || 10, grado: grado.trim(), tipo_alimentacion: student.tipo_alimentacion || 'PAE' }) }); const updated = { ...student, nombre: nombre.trim(), documento: documento.trim(), grado: grado.trim() }; if (!remote.ok) updated.local = true; store.students = store.students.map(s => String(s.id) === String(student.id) ? updated : s); persist(); renderStudents(); showNotice(remote.ok ? 'Estudiante actualizado en la base de datos.' : 'Estudiante actualizado en este navegador; MySQL no respondió.', remote.ok ? 'success' : 'info') }
+    async function deleteStudent(button) { const id = button.dataset.studentId, name = button.dataset.studentName; if (!window.confirm(`¿Desea borrar a ${name}?`)) return; const student = (store.students || []).find(s => String(s.id) === String(id)); const remote = student?.local ? { ok: true } : await api(`/api/registro-estudiantes/${id}`, { method: 'DELETE' }); if (!remote.ok) return showNotice(remote.data?.error || 'No se puede borrar este estudiante porque tiene registros asociados.', 'error'); store.students = (store.students || []).filter(s => String(s.id) !== String(id)); persist(); renderStudents(); showNotice(`${name} fue borrado del registro.`, 'success') }
+    function componentRow(c = { componente: 'otros', grado: '5-1', alimento: '', gramos: '', es_opcional: false }) { const id = `component-${Date.now()}-${Math.random().toString(16).slice(2)}`; return `<tr data-row="${id}"><td><select class="component-kind"><option value="proteína" ${c.componente === 'proteína' ? 'selected' : ''}>Proteína</option><option value="carbohidrato" ${c.componente === 'carbohidrato' ? 'selected' : ''}>Carbohidrato</option><option value="legumbre" ${c.componente === 'legumbre' ? 'selected' : ''}>Legumbre</option><option value="ensalada" ${c.componente === 'ensalada' ? 'selected' : ''}>Ensalada</option><option value="fruta" ${c.componente === 'fruta' ? 'selected' : ''}>Fruta</option><option value="bebida" ${c.componente === 'bebida' ? 'selected' : ''}>Bebida</option><option value="postre" ${c.componente === 'postre' ? 'selected' : ''}>Postre</option><option value="otros" ${c.componente === 'otros' ? 'selected' : ''}>Otros</option></select></td><td><select class="component-grade">${LUNCH_GROUPS.map(g => `<option value="${g}" ${c.grado === g ? 'selected' : ''}>${GROUP_NAMES[g]}</option>`).join('')}</select></td><td><input class="component-food" value="${safe(c.alimento)}" placeholder="Ej. Arroz"></td><td><input class="component-grams" type="number" min="0" step="any" value="${c.gramos ?? ''}" style="max-width:76px"><span class="unit-tag ${(c.unidad || unitOfKind(c.componente)) === 'L' ? 'liter' : ''}">${c.unidad || unitOfKind(c.componente)}</span></td><td style="text-align:center"><input class="component-optional" type="checkbox" ${c.es_opcional ? 'checked' : ''} style="width:auto"></td><td><button class="remove-row" type="button" title="Quitar">×</button></td></tr>` } function loadMenuForm() { const date = $('menu-date').value || today, m = menuFor(date) || { ...defaultMenu, fecha: date, componentes: [] }; $('menu-name').value = m.nombre_menu || ''; $('ration-type').value = m.tipo_racion || 'caliente'; $('menu-total').value = m.gramaje_total || ''; $('window-start').value = m.ventana_inicio || '09:30'; $('window-end').value = m.ventana_fin || '13:00'; $('registration-enabled').checked = m.registro_habilitado !== false; const grams = groupGramajes(m); LUNCH_GROUPS.forEach(g => { if ($(`group-grams-${g}`)) $(`group-grams-${g}`).value = grams[g] || '' }); } function readComponents() { return [...document.querySelectorAll('#component-rows tr')].map(row => ({ componente: row.querySelector('.component-kind').value, grado: row.querySelector('.component-grade')?.value || '5-1', alimento: row.querySelector('.component-food').value.trim(), gramos: Number(row.querySelector('.component-grams').value || 0), unidad: unitOfKind(row.querySelector('.component-kind').value), es_opcional: row.querySelector('.component-optional').checked })).filter(c => c.alimento) }
+    function setMethod(method) { activeMethod = method; $('method-qr').classList.toggle('active', method === 'qr'); $('method-doc').classList.toggle('active', method === 'doc'); $('scanner-box').style.display = method === 'qr' ? 'grid' : 'none'; $('consumption-code').placeholder = method === 'qr' ? 'Ej. AC-... o documento' : 'Ej. 1001'; if (method === 'doc') { $('scanner-placeholder').querySelector('.camera').textContent = '⌨'; $('scanner-placeholder').querySelector('p').textContent = 'Escribe el número de documento en el formulario de confirmación.' } else { $('scanner-placeholder').querySelector('.camera').textContent = '▣'; $('scanner-placeholder').querySelector('p').textContent = 'Escanea el código del estudiante con la cámara del dispositivo.' } } function windowIsOpen(date) { const m = menuFor(date); if (!m || m.registro_habilitado === false) return { open: false, text: m ? 'Registro cerrado por el docente.' : 'No hay menú configurado para esta fecha.' }; if (date !== today) return { open: true, text: 'Modo de consulta histórica' }; const now = new Date().toTimeString().slice(0, 5), open = now >= m.ventana_inicio && now <= m.ventana_fin; return { open, text: open ? `Activo hasta ${m.ventana_fin}` : `Disponible ${m.ventana_inicio} — ${m.ventana_fin}` } } function renderWindow() { if (!$('consumption-date') || !$('window-status')) return; const date = $('consumption-date').value || today, w = windowIsOpen(date); $('window-status').textContent = w.text; $('window-status').style.color = w.open ? '#317049' : '#a64040'; $('window-badge').textContent = w.open ? 'Ventana activa' : 'Ventana cerrada'; $('window-badge').className = `badge ${w.open ? '' : 'red'}` }
+    async function registerConsumption() { const date = $('consumption-date').value || today, code = $('consumption-code').value.trim(); if (!isWeekday(date)) return showNotice('El registro de consumo está disponible de lunes a viernes.', 'error', 'consumption-notice'); if (!code) return showNotice('Ingresa un documento o escanea un código QR.', 'error', 'consumption-notice'); const w = windowIsOpen(date); if (!w.open && date === today) return showNotice(w.text, 'error', 'consumption-notice'); let student = store.students.find(s => s.documento === code || s.codigo_qr === code); if (!student) { const remote = await api('/api/estudiantes'); if (remote.ok) student = remote.data.data.find(s => s.documento === code || s.codigo_qr === code) } if (!student) return showNotice('No encontramos un estudiante con ese documento o código QR.', 'error', 'consumption-notice'); store.consumos[date] ??= []; if (store.consumos[date].some(r => r.documento === student.documento)) return showNotice(`${student.nombre} ya confirmó su consumo hoy.`, 'error', 'consumption-notice'); const remote = await api('/api/consumos', { method: 'POST', body: JSON.stringify({ codigo: code, fecha: date, metodo: activeMethod === 'qr' ? 'qr' : 'documento' }) }); if (!remote.ok && !remote.offline && remote.data?.error) return showNotice(remote.data.error, 'error', 'consumption-notice'); store.consumos[date].push({ documento: student.documento, nombre: student.nombre, grado: student.grado, hora: new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' }) }); persist(); $('consumption-code').value = ''; showNotice(`Consumo confirmado: ${student.nombre} · ${student.grado}`, 'success', 'consumption-notice'); renderDashboard() }
+    async function saveMenu(e) { e.preventDefault(); const date = $('menu-date').value || today; if (!isWeekday(date)) return showNotice('Configura el menú en un día de lunes a viernes.', 'error'); const gramajes_grupo = Object.fromEntries(LUNCH_GROUPS.map(g => [g, Number($(`group-grams-${g}`)?.value || 0)])), menu = { fecha: date, gramajes_grupo, nombre_menu: $('menu-name').value.trim(), tipo_racion: $('ration-type').value, gramaje_total: Number($('menu-total').value || 0), ventana_inicio: $('window-start').value, ventana_fin: $('window-end').value, registro_habilitado: $('registration-enabled').checked, notas: '', componentes: (store.menus[date]?.componentes) || [] }; if (!menu.nombre_menu || menu.gramaje_total <= 0) return showNotice('Completa el nombre del menú y un gramaje mayor que cero.', 'error'); store.menus[date] = menu; persist(); const remote = await api('/api/menu', { method: 'POST', body: JSON.stringify({ ...menu, componentes: undefined }) }); showNotice(remote.ok ? 'Menú guardado en la base de datos y en el modo local.' : 'Menú guardado en modo local. Importa el SQL para sincronizar MySQL.', remote.ok ? 'success' : 'info'); renderDashboard(); renderWindow() } function paeDeliveryFor(date) { return store.pae_entregas?.[date] || null } const PAE_KINDS = ['proteína', 'carbohidrato', 'legumbre', 'ensalada', 'fruta', 'bebida', 'otros']; let paeDirty = false, paeFormKey = '', paeFormDate = '';
+    function unitOfKind(k) { return String(k || '').toLowerCase() === 'bebida' ? 'L' : 'g' }
+    function cap(k) { k = String(k || ''); return k.charAt(0).toUpperCase() + k.slice(1) }
+    function fmtL(n) { return (Number(n) || 0).toLocaleString('es-CO', { maximumFractionDigits: 2 }) }
+    function qtyText(n, u) { return u === 'L' ? `${fmtL(n)} L` : gk(n) }
+    function paeSummary(list, pct) { const r = { sg: 0, eg: 0, sl: 0, el: 0 }; list.forEach(c => { const sv = Number(c.servido) || 0, en = (c.entregado != null && c.entregado !== '') ? Number(c.entregado) : sv * pct / 100; if ((c.unidad || unitOfKind(c.componente)) === 'L') { r.sl += sv; r.el += en } else { r.sg += sv; r.eg += en } }); return r }
+    function paeRowHTML(c = { componente: 'proteína', alimento: '', servido: '' }) { const u = c.unidad || unitOfKind(c.componente); return `<tr class="pae-row"><td><select class="pae-kind">${PAE_KINDS.map(k => `<option value="${k}" ${c.componente === k ? 'selected' : ''}>${cap(k)}</option>`).join('')}</select></td><td><select class="pae-grade"><option value="">Todos los grados</option>${LUNCH_GROUPS.map(g => `<option value="${g}" ${c.grado === g ? 'selected' : ''}>${GROUP_NAMES[g]}</option>`).join('')}</select></td><td><input class="pae-food" value="${safe(c.alimento)}" placeholder="${u === 'L' ? 'Ej. Jugo de mora' : 'Ej. Arroz'}"></td><td><input class="pae-qty" type="number" min="0" step="any" value="${c.servido ?? ''}" style="max-width:96px" placeholder="0"><span class="unit-tag ${u === 'L' ? 'liter' : ''}">${u}</span></td><td class="pae-delivered-cell">—</td><td><button class="remove-row" type="button" title="Quitar">×</button></td></tr>` }
+    function readPaeRows() { return [...document.querySelectorAll('#pae-delivery-rows tr')].map(r => { const k = r.querySelector('.pae-kind').value; return { componente: k, grado: r.querySelector('.pae-grade')?.value || '', alimento: r.querySelector('.pae-food').value.trim(), unidad: unitOfKind(k), servido: Number(r.querySelector('.pae-qty').value || 0) } }).filter(c => c.alimento || c.servido > 0) }
+    function recalcPae() { const pct = Math.min(Math.max(Number($('pae-delivered-percent')?.value || 0), 0), 100); document.querySelectorAll('#pae-delivery-rows tr').forEach(r => { const u = unitOfKind(r.querySelector('.pae-kind').value), sv = Number(r.querySelector('.pae-qty').value || 0); r.querySelector('.pae-delivered-cell').textContent = sv ? qtyText(sv * pct / 100, u) : '—' }); const sum = paeSummary(readPaeRows(), pct), box = $('pae-delivery-totals'); if (!box) return; box.innerHTML = `<div class="pae-total">Servido (g · kg)<b>${gk(sum.sg)}</b></div><div class="pae-total good">Entregado (${pct.toFixed(2)}%)<b>${gk(sum.eg)}</b></div><div class="pae-total bad">No entregado<b>${gk(Math.max(sum.sg - sum.eg, 0))}</b></div>` + (sum.sl ? `<div class="pae-total">Bebidas servidas<b>${fmtL(sum.sl)} L</b></div><div class="pae-total good">Bebidas entregadas<b>${fmtL(sum.el)} L</b></div>` : '') }
+    function renderPaeDelivery(date = today) {
+      const value = paeDeliveryFor(date), key = date + '|' + JSON.stringify(value || null); if (paeFormDate !== date) { paeDirty = false; paeFormDate = date; paeFormKey = '' } if ($('pae-delivery-date')) $('pae-delivery-date').value = date; if (!paeDirty && key !== paeFormKey && $('pae-delivery-rows')) { paeFormKey = key; $('pae-delivered-percent').value = value?.porcentaje_entregado ?? ''; $('pae-delivery-note').value = value?.observacion || ''; const comps = value?.componentes || []; $('pae-delivery-rows').innerHTML = (comps.length ? comps : [{ componente: 'proteína', alimento: '', servido: '' }]).map(paeRowHTML).join(''); recalcPae() }
+      if ($('pae-delivery-table')) { const comps = (value?.componentes || []), pct = Number(value?.porcentaje_entregado) || 0; $('pae-delivery-table').innerHTML = comps.length ? comps.map(c => { const u = c.unidad || unitOfKind(c.componente), sv = Number(c.servido) || 0, en = (c.entregado != null && c.entregado !== '') ? Number(c.entregado) : sv * pct / 100; return `<tr><td><span class="badge gray">${safe(cap(c.componente))}</span></td><td>${safe(c.alimento || '—')}${c.grado ? ` · ${safe(GROUP_NAMES[c.grado] || c.grado)}` : ''}</td><td>${qtyText(sv, u)}</td><td><b>${qtyText(en, u)}</b></td><td>${qtyText(Math.max(sv - en, 0), u)}</td></tr>` }).join('') : (value ? `<tr><td colspan="5">Entrega registrada: <b>${pct.toFixed(2)}%</b>${value.observacion ? ' · ' + safe(value.observacion) : ''} · sin componentes detallados.</td></tr>` : '<tr><td colspan="5" class="empty">Aún no hay registro de componentes del almuerzo.</td></tr>') }
+    }
+    function loadPaeFromMenu() { const date = $('global-date').value || today, m = menuFor(date) || {}, seen = new Set(), rows = []; (m.componentes || []).forEach(c => { const k = `${c.componente}|${String(c.alimento || '').toLowerCase()}`; if (!c.alimento || seen.has(k)) return; seen.add(k); rows.push({ componente: c.componente, alimento: c.alimento, servido: '' }) }); if (!rows.length) return showNotice('El menú de esta fecha no tiene componentes. Agrégalos en "Proteínas, carbohidratos y gramaje".', 'info'); paeDirty = true; $('pae-delivery-rows').innerHTML = rows.map(paeRowHTML).join(''); recalcPae(); showNotice('Componentes cargados desde el menú. Escribe la cantidad servida de cada uno.', 'success') }
+    async function savePaeDelivery(e) { e.preventDefault(); const fecha = $('pae-delivery-date').value || today, porcentaje_entregado = Number($('pae-delivered-percent').value || 0), observacion = $('pae-delivery-note').value.trim(); if (!(porcentaje_entregado >= 0 && porcentaje_entregado <= 100)) return showNotice('El porcentaje entregado debe estar entre 0 y 100.', 'error'); const rows = readPaeRows(); if (rows.some(c => !c.alimento)) return showNotice('Escribe el nombre del alimento en cada componente.', 'error'); if (rows.some(c => c.servido < 0)) return showNotice('Las cantidades no pueden ser negativas.', 'error'); const componentes = rows.map(c => ({ ...c, entregado: Math.round(c.servido * porcentaje_entregado) / 100 })); const data = { fecha, porcentaje_entregado, porcentaje_disponible: 0, observacion, componentes }; const remote = await api('/api/pae-entrega', { method: 'POST', body: JSON.stringify(data) }); store.pae_entregas ??= {}; store.pae_entregas[fecha] = data; persist(); paeDirty = false; paeFormKey = ''; renderPaeDelivery(fecha); renderDashboard(); renderReports(); showNotice(remote.ok ? 'Registro del almuerzo guardado en MySQL (servido y entregado por componente).' : `Registro del almuerzo guardado solo en este navegador: ${remote.data?.error || 'MySQL no respondió'}.`, remote.ok ? 'success' : 'info') }
+    async function saveWaste(e) { e.preventDefault(); const form = e.currentTarget, tipo = form.dataset.tipo, date = $('global-date').value || today, peso = Number(form.querySelector('input[type=number]').value || 0), grado = form.querySelector('select').value; if (!grado) return showNotice('Seleccione el grado individual del desperdicio.', 'error'); if (peso < 0) return; const nota = form.querySelector('textarea').value.trim(); store.desperdicios[date] ??= {}; store.desperdicios[date][tipo] = [...getWasteEntries(date, tipo), { peso, grado, nota }]; persist(); const remote = await api('/api/residuos', { method: 'POST', body: JSON.stringify({ fecha: date, peso_sobrante_gramos: peso, tipo_alimentacion: tipo, grado, grupo_tipo: 'individual', nota }) }); showNotice(remote.ok ? `Desperdicio de ${tipo} para ${GROUP_NAMES[grado]} guardado en la base de datos.` : `Desperdicio de ${tipo} guardado en modo local.`, remote.ok ? 'success' : 'info'); form.reset(); if (form.querySelector('input[id$="-date"]')) form.querySelector('input[id$="-date"]').value = date; renderDashboard(); renderReports() } async function saveStudent(e) {
+      e.preventDefault(); const nombre = $('student-name').value.trim(), tipo_consumo = $('student-consumption').value; if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+$/.test(nombre)) return showNotice('El nombre debe contener solo letras y espacios.', 'error'); if (tipo_consumo === 'ninguno') return showNotice('Seleccione Vaso de leche o Almuerzo.', 'error'); const normalizar = n => String(n || '').toLowerCase().trim().replace(/\s+/g, ' ');
+      // Consultar SIEMPRE el Registro de estudiantes real antes de registrar.
+      const padrón = await api('/api/estudiantes');
+      if (!padrón.ok) { return showNotice(padrón.data?.error || 'No se pudo consultar el Registro de estudiantes. Verifique la conexión con MySQL.', 'error') }
+      const estudiantes = padrón.data?.data || [];
+      store.students = estudiantes; persist();
+      const s = estudiantes.find(x => normalizar(x.nombre) === normalizar(nombre));
+      if (!s) return showNotice('Este nombre no existe en Registro de estudiantes. No se registró el consumo.', 'error');
+      const remote = await api('/api/estudiantes', { method: 'POST', body: JSON.stringify({ nombre: s.nombre, tipo_consumo }) });
+      if (!remote.ok) return showNotice(remote.data?.error || 'No fue posible registrar el consumo.', 'error');
+      store.consumos[today] ??= []; store.consumos[today] = store.consumos[today].filter(r => normalizar(r.nombre) !== normalizar(s.nombre));
+      store.consumos[today].push({ documento: s.documento, nombre: s.nombre, grado: s.grado, tipo_consumo, fecha: today, hora: remote.data?.data?.hora || new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' }) });
+      persist(); $('student-form').reset(); await loadControl(today); renderStudents(); renderDashboard(); showNotice(`Registro de ${s.nombre} realizado exitosamente. El estudiante ya aparece en Control de estudiantes.`, 'success')
+    }
+    function reportRows() {
+      const date = $('global-date').value || today, selected = $('report-grade').value, rows = [], d = getDayData(date), menu = d.menu || {}, grams = groupGramajes(menu), pd = paeData(date), pg = paeGroupsData(date),
+        details = (menu.componentes || []).map(c => `${c.alimento || c.componente} (${qtyText(c.gramos, c.unidad || unitOfKind(c.componente))})`).join(' · '), menuTxt = details ? `${menu.nombre_menu || 'Sin menú'} · ${details}` : (menu.nombre_menu || 'Sin menú'),
+        notes = (tipo, g) => getWasteEntries(date, tipo).filter(x => !x.grado || x.grado === g).map(x => x.nota).filter(Boolean);
+      // ALMUERZO
+      (selected ? LUNCH_GROUPS.filter(g => g === selected) : LUNCH_GROUPS).forEach(g => { const consumos = d.records.filter(r => recordService(r) === 'almuerzo' && r.grado === g).length, ration = Number(grams[g]) || Number(menu.gramaje_total) || 0, served = menu.nombre_menu ? ration : consumos * ration, w = wasteForGroup(date, 'almuerzo', g, served, 0), obs = [menu.notas, pd.v?.observacion, ...notes('almuerzo', g)].filter(Boolean).join(' · ') || '—'; if (consumos || w || served || obs !== '—') rows.push({ fecha: date, tipo: 'almuerzo', grado: g, menu: menuTxt, kinds: kindTotals(menu, g), gramaje: ration, observaciones: obs, entrega: pd.v ? `${pd.pct.toFixed(2)}%` : '—', consumos, servido: served, desperdicio: w, porcentajePerdida: served ? w / served * 100 : 0 }) });
+      // PAE
+      let first = true; paeGroupsList(date).filter(g => !selected || g === selected).forEach(g => { const x = pg.map[g], consumos = d.records.filter(r => recordService(r) === 'PAE' && r.grado === g).length, ration = Number(grams[g]) || Number(menu.gramaje_total) || 0, served = pg.has ? (x?.servido || 0) : consumos * ration, deliv = pg.has ? (x?.entregado || 0) : served, w = wasteForGroup(date, 'PAE', g, served, 0), own = notes('PAE', g), obs = [(first || selected) && pg.v?.observacion, ...own].filter(Boolean).join(' · ') || '—'; if (!(consumos || w || served)) return; if (pg.v?.observacion) first = false; rows.push({ fecha: date, tipo: 'PAE', grado: g, menu: 'Entrega PAE por grupo', kinds: null, gramaje: served, observaciones: obs, entrega: (pg.v && served > 0) ? `${pg.pct.toFixed(2)}% · ${gk(deliv)}` : '—', consumos, servido: served, desperdicio: w, porcentajePerdida: (pg.has ? deliv : served) ? w / (pg.has ? deliv : served) * 100 : 0 }) });
+      return rows
+    } function renderReports() { const rows = reportRows(), delivery = paeDeliveryFor($('global-date').value || today), waste = rows.reduce((n, r) => n + r.desperdicio, 0), day = getDayData($('global-date').value || today); $('report-date-label').textContent = $('global-date').value || today; $('report-total-waste').textContent = money(waste); $('report-waste-percent').textContent = `${day.loss.toFixed(1)}%`; $('report-pae-delivered').textContent = (() => { const g = paeGroupsData($('global-date').value || today); return g.v ? `${g.pct.toFixed(2)}%` : '—' })(); $('report-table').innerHTML = rows.length ? rows.map(r => `<tr><td>${safe(r.fecha)}</td><td>${safe(r.tipo)}</td><td><span class="badge gray">${safe(GROUP_NAMES[r.grado] || r.grado)}</span></td><td>${safe(r.menu)}</td>${kindCells(r)}<td>${gk(r.gramaje)}</td><td>${safe(r.observaciones)}</td><td>${safe(r.entrega || '—')}</td><td>${r.consumos}</td><td>${gk(r.servido)}</td><td>${gk(r.desperdicio)}</td><td>${Number(r.porcentajePerdida).toFixed(1)}%</td></tr>`).join('') : '<tr><td colspan="18" class="empty">No hay datos para el día seleccionado.</td></tr>'; const groupMap = {}; rows.forEach(r => { (groupMap[r.grado] ??= { almuerzo: 0, PAE: 0 })[r.tipo] += r.desperdicio }); const gl = Object.keys(groupMap); if (chart) chart.destroy(); const canvas = $('waste-chart'); if (window.Chart && canvas) chart = new Chart(canvas, { type: 'bar', data: { labels: gl.map(g => GROUP_NAMES[g] || g), datasets: [{ label: 'Almuerzo', data: gl.map(g => groupMap[g].almuerzo / 1000), backgroundColor: '#e98138', borderRadius: 4 }, { label: 'PAE', data: gl.map(g => groupMap[g].PAE / 1000), backgroundColor: '#bedf71', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${Math.round(c.parsed.y * 1000)} g · ${fmtKg(c.parsed.y)} kg` } } }, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Desperdicio (kg)' }, ticks: { callback: v => v + ' kg' } } } } }) } async function startScanner() { if (!window.Html5Qrcode) return showNotice('El lector QR no está disponible; usa el ingreso manual.', 'info', 'consumption-notice'); $('reader').hidden = false; $('scanner-placeholder').querySelector('p').textContent = 'Apunta la cámara al código QR...'; try { scanner = new Html5Qrcode('reader'); await scanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: 220 }, async text => { if (scanner) { await scanner.stop(); scanner = null } $('reader').hidden = true; $('consumption-code').value = text; await registerConsumption() }, () => { }) } catch (e) { showNotice('No se pudo activar la cámara. Puedes ingresar el documento manualmente.', 'info', 'consumption-notice') } } function switchPanel(name) { document.querySelectorAll('[data-panel-view]').forEach(p => p.classList.toggle('active', p.dataset.panelView === name)); document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.panel === name)); $('crumb-title').textContent = ({ inicio: 'Resumen general', menu: 'Menú y gramaje', registro: 'Registro de estudiantes', estudiantes: 'Control de estudiantes', reportes: 'Reportes' })[name]; if (name === 'inicio') renderDashboard(); if (name === 'menu') loadMenuForm(); if (name === 'registro' || name === 'estudiantes') { renderStudents(); loadControl(); } if (name === 'reportes') renderReports(); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+    document.addEventListener('click', e => { const edit = e.target.closest('.btn-edit-student'); if (edit) { editStudent(edit); return } const del = e.target.closest('.btn-delete-student'); if (del) { deleteStudent(del); return } const controlFolder = e.target.closest('[data-control-grade-folder]'); if (controlFolder) { document.querySelectorAll('.control-grade-folder').forEach(x => x.classList.remove('active')); document.querySelectorAll('.control-folder-list').forEach(x => x.classList.remove('active')); controlFolder.classList.add('active'); document.querySelector(`[data-control-folder-list=\"${controlFolder.dataset.controlGradeFolder}\"]`).classList.add('active'); return } const folder = e.target.closest('[data-grade-folder]'); if (folder) { document.querySelectorAll('#grade-folders .grade-folder').forEach(x => x.classList.remove('active')); document.querySelectorAll('#folder-lists .folder-list').forEach(x => x.classList.remove('active')); folder.classList.add('active'); document.querySelector(`[data-folder-list=\"${folder.dataset.gradeFolder}\"]`).classList.add('active') } const nav = e.target.closest('.nav-btn'); if (nav) switchPanel(nav.dataset.panel); const go = e.target.closest('[data-go]'); if (go) switchPanel(go.dataset.go); if (e.target.closest('.remove-row')) e.target.closest('tr').remove() }); $('menu-form').addEventListener('submit', saveMenu); document.querySelectorAll('.waste-form').forEach(form => form.addEventListener('submit', saveWaste)); $('pae-delivery-form').addEventListener('submit', savePaeDelivery); $('master-form').addEventListener('submit', saveMaster); $('clear-menu').addEventListener('click', () => {
+      const startWindow = $('window-start').value;
+      const endWindow = $('window-end').value;
+      const menuDate = $('menu-date').value || today;
+      $('menu-form').reset();
+      $('menu-date').value = menuDate;
+      $('window-start').value = startWindow;
+      $('window-end').value = endWindow;
+      $('menu-name').value = '';
+      $('menu-total').value = '';
+      $('ration-type').value = 'caliente';
+      $('registration-enabled').checked = true;
+      LUNCH_GROUPS.forEach(g => { const input = $(`group-grams-${g}`); if (input) input.value = ''; });
+      updateKgHints();
+    }); $('apply-report').addEventListener('click', async () => { const date = $('global-date').value || today; setDateInputs(date); try { await syncSelectedDate(date) } catch (e) { } renderDashboard(); renderReports(); showNotice('Reporte actualizado desde la base de datos.', 'success') }); $('global-date').addEventListener('change', async e => { const date = e.target.value || today; setDateInputs(date); loadMenuForm(); renderDashboard(); renderPaeDelivery(date); renderReports(); loadControl(date); renderWindow(); await syncSelectedDate(date); loadMenuForm(); loadControl(date); renderWindow() });['dashboard-date', 'consumption-date'].forEach(id => $(id)?.addEventListener('change', () => { setDateInputs($('global-date').value || today); renderDashboard() })); $('menu-date').addEventListener('change', loadMenuForm);['control-date', 'registro-date'].forEach(id => $(id)?.addEventListener('change', e => { const date = $('global-date').value || today; setDateInputs(date); loadControl(date) })); $('role-select').addEventListener('change', e => applyRole(e.target.value)); async function applyRole(role) { $('role-label').textContent = role === 'docente' ? 'Docente' : 'Administrador'; document.querySelectorAll('.nav-btn').forEach(b => { b.style.display = (role === 'docente' && ['registro'].includes(b.dataset.panel)) ? 'none' : '' }); if (role === 'docente' && $('master-form')) $('master-form').closest('.grid-2').style.display = 'none'; else if ($('master-form')) $('master-form').closest('.grid-2').style.display = ''; } async function loadSessionRole() { const r = await api('/api/sesion'); if (r.ok && r.data.autenticado === false) { window.location.replace('index1.html'); return } if (r.ok && r.data.usuario) { $('role-select').value = r.data.usuario.rol === 'docente' ? 'docente' : 'admin'; applyRole($('role-select').value) } }
+    async function syncSelectedDate(date) { const menu = await api(`/api/menu?fecha=${date}`); if (menu.ok && menu.data.data) { store.menus[date] = { ...store.menus[date], ...menu.data.data, registro_habilitado: Boolean(menu.data.data.registro_habilitado) }; } const consumos = await api(`/api/consumos?fecha=${date}`); if (consumos.ok && Array.isArray(consumos.data.data)) { store.consumos[date] = consumos.data.data.map(r => ({ documento: r.documento, nombre: r.nombre, grado: r.grado, tipo_consumo: r.tipo_consumo || 'ninguno', tipo_alimentacion: r.tipo_alimentacion || ((LUNCH_GROUPS.includes(r.grado)) ? 'almuerzo' : 'PAE'), hora: r.hora, fecha: date })); } const residuos = await api(`/api/residuos?fecha=${date}`); if (residuos.ok && Array.isArray(residuos.data.data)) { const byType = { PAE: [], almuerzo: [] }; residuos.data.data.forEach(r => { const tipo = r.tipo_alimentacion === 'almuerzo' ? 'almuerzo' : 'PAE'; byType[tipo].push({ peso: Number(r.peso || 0), grado: r.grado || '', grupo: r.grupo || 'individual', nota: r.nota || '' }) }); store.desperdicios[date] = byType; } const entrega = await api(`/api/pae-entrega?fecha=${date}`); if (entrega.ok) { store.pae_entregas ??= {}; if (entrega.data.data) store.pae_entregas[date] = entrega.data.data; else delete store.pae_entregas[date]; } persist(); renderDashboard(); renderPaeDelivery(date); renderReports() }
+    async function syncDatabase() { const students = await api('/api/estudiantes'); if (students.ok && Array.isArray(students.data.data)) { store.students = students.data.data; persist(); renderStudents() } await loadControl(today); const menu = await api(`/api/menu?fecha=${today}`); if (menu.ok && menu.data.data) { store.menus[today] = { ...store.menus[today], ...menu.data.data, registro_habilitado: Boolean(menu.data.data.registro_habilitado) }; persist(); loadMenuForm(); renderDashboard() } const consumos = await api(`/api/consumos?fecha=${today}`); if (consumos.ok && Array.isArray(consumos.data.data)) { store.consumos[today] = consumos.data.data.map(r => ({ documento: r.documento, nombre: r.nombre, grado: r.grado, tipo_consumo: r.tipo_consumo || 'ninguno', hora: r.hora, fecha: today })); persist(); renderStudents(); renderDashboard() } const history = await api('/api/historial-consumos'); if (history.ok && Array.isArray(history.data.data)) { store.historial = history.data.data; persist(); renderStudents() } const residuos = await api(`/api/residuos?fecha=${today}`); if (residuos.ok && Array.isArray(residuos.data.data)) { const byType = { PAE: [], almuerzo: [] }; residuos.data.data.forEach(r => { const tipo = r.tipo_alimentacion === 'almuerzo' ? 'almuerzo' : 'PAE'; byType[tipo].push({ peso: Number(r.peso || 0), grado: r.grado || '', grupo: r.grupo || 'individual', nota: r.nota || '' }) }); store.desperdicios[today] = byType; persist(); renderDashboard(); } const entrega = await api(`/api/pae-entrega?fecha=${today}`); if (entrega.ok) { store.pae_entregas ??= {}; if (entrega.data.data) store.pae_entregas[today] = entrega.data.data; else delete store.pae_entregas[today]; persist(); renderPaeDelivery(today); renderReports() } }
+    setDateInputs(); loadMenuForm(); renderStudents(); renderDashboard(); renderReports(); renderPaeDelivery(today); loadSessionRole(); setGradeOptions('PAE', 'master-grade'); document.getElementById('master-alimentation')?.addEventListener('change', e => setGradeOptions(e.target.value, 'master-grade')); syncDatabase();
+  </script>
+  <script>
+    // Resumen y reportes: gramos/kilogramos (litros en bebidas), servicio, desperdicio y entrega del PAE
+    let carbChart = null, paeChart = null, paeChartR = null;
+    var KIND_COLORS = { 'proteína': '#e98138', 'carbohidrato': '#bedf71', 'legumbre': '#6eae87', 'ensalada': '#173d35', 'fruta': '#f2c14e', 'bebida': '#7fb3d5', 'postre': '#ce5c5c', 'otros': '#b7c4bc' };
+    function wasteOf(date, g) { return ['PAE', 'almuerzo'].flatMap(t => getWasteEntries(date, t).filter(x => x.grado === g)).reduce((n, x) => n + Number(x.peso || 0), 0) }
+    function groupInfo(date, d, g) { const m = d.menu || {}, grams = groupGramajes(m), ration = Number(grams[g]) || Number(m.gramaje_total) || 0, n = d.records.filter(r => r.grado === g).length, st = componentStats(m, g); const tipo = LUNCH_GROUPS.includes(g) ? 'almuerzo' : 'PAE'; return { g, tipo, ration, n, served: (tipo === 'almuerzo' && m.nombre_menu) ? ration : n * ration, waste: wasteOf(date, g), protein: st.protein, carbs: st.carbs } }
+    function dayNumbers(date, d) { const pd = paeData(date), pg = paeGroupsData(date), paeServed = pg.has ? pg.sg : d.paeServed, paeDelivered = pg.has ? pg.eg : d.paeServed, served = d.lunchServed + paeServed, delivered = d.lunchServed + paeDelivered, effective = Math.max(delivered - d.waste, 0), loss = delivered ? d.waste / delivered * 100 : 0; return { pd, pg, paeServed, paeDelivered, served, delivered, effective, loss } }
+    function kindSum(pd, kind) { return pd.list.filter(c => c.componente === kind && c.unidad !== 'L').reduce((n, c) => n + c.entregado, 0) }
+    function relationHTML(date, d, selected) {
+      const n = dayNumbers(date, d), pd = n.pd, pg = n.pg, m = d.menu || {}, grams = groupGramajes(m), dash = v => v > 0 ? gk(v) : '—';
+      const lunch = (selected ? LUNCH_GROUPS.filter(g => g === selected) : LUNCH_GROUPS).map(g => { const ration = Number(grams[g]) || Number(m.gramaje_total) || 0, cnt = d.records.filter(r => recordService(r) === 'almuerzo' && r.grado === g).length; return { g, k: kindTotals(m, g), served: m.nombre_menu ? ration : cnt * ration, waste: wasteType(date, 'almuerzo', g) } }).filter(i => i.served > 0 || i.waste > 0);
+      const pae = paeGroupsList(date).filter(g => !selected || g === selected).map(g => { const x = pg.map[g], cnt = d.records.filter(r => recordService(r) === 'PAE' && r.grado === g).length, ration = Number(grams[g]) || Number(m.gramaje_total) || 0, served = pg.has ? (x?.servido || 0) : cnt * ration; return { g, served, deliv: pg.has ? (x?.entregado || 0) : served, waste: wasteType(date, 'PAE', g) } }).filter(i => i.served > 0 || i.waste > 0);
+      const lunchPct = pd.v ? `${pd.pct.toFixed(2)}%` : '—', paePct = pg.v ? `${pg.pct.toFixed(2)}%` : '—', kc = (k, f) => { const v = k[f]; return `<td>${dash(v)}</td>` };
+      let html = '', tot = { s: 0, w: 0, base: 0 };
+      const dashes = n => '<td>—</td>'.repeat(n);
+      if (lunch.length) {
+        const sS = lunch.reduce((a, i) => a + i.served, 0), sW = lunch.reduce((a, i) => a + i.waste, 0); tot.s += sS; tot.w += sW; tot.base += sS;
+        html += `<tr class="sub"><td colspan="13"><b>ALMUERZO</b></td></tr>` + lunch.map(i => `<tr><td>Almuerzo</td><td><span class="badge gray">${GROUP_NAMES[i.g]}</span></td>${kc(i.k, 'proteína')}${kc(i.k, 'carbohidrato')}${kc(i.k, 'legumbre')}${kc(i.k, 'ensalada')}${kc(i.k, 'fruta')}<td>${i.k.bebida > 0 ? fmtL(i.k.bebida) + ' L' : '—'}</td>${kc(i.k, 'otros')}<td>${dash(i.served)}</td><td>${gk(i.waste)}</td><td>${i.served ? pct(i.waste / i.served * 100) : '—'}</td><td>${lunchPct}</td></tr>`).join('')
+          + `<tr class="tot"><td colspan="2"><b>Subtotal Almuerzo</b></td>${dashes(7)}<td><b>${gk(sS)}</b></td><td><b>${gk(sW)}</b></td><td><b>${sS ? pct(sW / sS * 100) : '—'}</b></td><td><b>${lunchPct}</b></td></tr>`
+      }
+      if (pae.length) {
+        const sS = pae.reduce((a, i) => a + i.served, 0), sD = pae.reduce((a, i) => a + i.deliv, 0), sW = pae.reduce((a, i) => a + i.waste, 0); tot.s += sS; tot.w += sW; tot.base += sD;
+        html += `<tr class="sub"><td colspan="13"><b>PAE</b></td></tr>` + pae.map(i => `<tr><td>PAE</td><td><span class="badge gray">${GROUP_NAMES[i.g]}</span></td>${dashes(7)}<td>${dash(i.served)}</td><td>${gk(i.waste)}</td><td>${i.deliv ? pct(i.waste / i.deliv * 100) : '—'}</td><td>${(pg.v && i.served > 0) ? paePct + ' · ' + gk(i.deliv) : '—'}</td></tr>`).join('')
+          + `<tr class="tot"><td colspan="2"><b>Subtotal PAE</b></td>${dashes(7)}<td><b>${gk(sS)}</b></td><td><b>${gk(sW)}</b></td><td><b>${sD ? pct(sW / sD * 100) : '—'}</b></td><td><b>${pg.v ? paePct + ' · ' + gk(sD) : '—'}</b></td></tr>`
+      }
+      if (!html) return '<tr><td colspan="13" class="empty">No hay datos para el día seleccionado.</td></tr>';
+      return html + `<tr class="tot"><td colspan="9"><b>Total general</b></td><td><b>${gk(tot.s)}</b></td><td><b>${gk(tot.w)}</b></td><td><b>${tot.base ? pct(tot.w / tot.base * 100) : '—'}</b></td><td></td></tr>`
+    }
+    function paeCompHTML(pd) { if (!pd.has) return '<tr><td colspan="4" class="empty">Registra los componentes del almuerzo en "Menú y gramaje".</td></tr>'; const rows = pd.list.map(c => `<tr><td><span class="badge gray">${safe(cap(c.componente))}</span></td><td>${safe(c.alimento || '—')}${c.grado ? ` · ${safe(GROUP_NAMES[c.grado] || c.grado)}` : ''}</td><td>${qtyText(c.servido, c.unidad)}</td><td><b>${qtyText(c.entregado, c.unidad)}</b></td></tr>`).join(''); return rows + `<tr class="tot"><td colspan="2"><b>Total (${pd.pct.toFixed(2)}% entregado)</b></td><td><b>${gk(pd.sum.sg)}${pd.sum.sl ? ' · ' + fmtL(pd.sum.sl) + ' L' : ''}</b></td><td><b>${gk(pd.sum.eg)}${pd.sum.el ? ' · ' + fmtL(pd.sum.el) + ' L' : ''}</b></td></tr>` }
+    function chartOrEmpty(id, has, msg, build) { const cv = $(id), empty = $(id + '-empty'); if (!cv) return null; const wrap = cv.parentElement; if (wrap) wrap.style.display = has ? '' : 'none'; if (empty) { empty.style.display = has ? 'none' : 'block'; empty.textContent = msg } return (has && window.Chart) ? build(cv) : null }
+    function renderPaeCharts(pd) {
+      const bars = pd.list.filter(c => c.unidad !== 'L'), liters = pd.list.filter(c => c.unidad === 'L'), note = pd.has ? (liters.length ? 'Bebidas: ' + liters.map(c => `${safe(c.alimento || 'Bebida')} ${fmtL(c.servido)} L servidos · ${fmtL(c.entregado)} L entregados`).join(' | ') : `Entrega del día: ${pd.pct.toFixed(2)}%`) : 'Registra los componentes del almuerzo para ver la gráfica.';
+      const cfg = cv => new Chart(cv, { type: 'bar', data: { labels: bars.map(c => `${cap(c.componente)}${c.alimento ? ': ' + c.alimento : ''}${c.grado ? ' (' + (GROUP_NAMES[c.grado] || c.grado) + ')' : ''}`), datasets: [{ label: 'Servido (kg)', data: bars.map(c => c.servido / 1000), backgroundColor: '#bedf71', borderRadius: 6 }, { label: 'Entregado (kg)', data: bars.map(c => c.entregado / 1000), backgroundColor: '#317049', borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: t => `${t.dataset.label.split(' ')[0]}: ${Math.round(t.parsed.y * 1000)} g · ${fmtKg(t.parsed.y)} kg` } } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'kg' }, ticks: { callback: v => v + ' kg' } } } } });
+      if (paeChart) { paeChart.destroy(); paeChart = null } if (paeChartR) { paeChartR.destroy(); paeChartR = null }
+      const msg = pd.has ? 'Solo hay bebidas (litros); no hay componentes en gramos para graficar.' : 'Registra los componentes del almuerzo para ver la gráfica.';
+      paeChart = chartOrEmpty('pae-chart', bars.length > 0, msg, cfg); paeChartR = chartOrEmpty('pae-chart-r', bars.length > 0, msg, cfg);
+      ['pae-chart-note', 'pae-chart-note-r'].forEach(id => { if ($(id)) $(id).innerHTML = note });['pae-comp-body', 'pae-comp-body-r'].forEach(id => { if ($(id)) $(id).innerHTML = paeCompHTML(pd) })
+    }
+    function statisticalSummary(values) {
+      const nums = values.map(Number).filter(v => Number.isFinite(v) && v > 0);
+      if (!nums.length) return { average: 0, median: 0, mode: null };
+      nums.sort((a, b) => a - b);
+      const average = nums.reduce((a, b) => a + b, 0) / nums.length;
+      const mid = Math.floor(nums.length / 2);
+      const median = nums.length % 2 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+      const counts = new Map(); nums.forEach(v => counts.set(v, (counts.get(v) || 0) + 1));
+      const max = Math.max(...counts.values());
+      const modes = [...counts.entries()].filter(([, c]) => c === max).map(([v]) => v);
+      return { average, median, mode: max > 1 ? modes : null }
+    }
+    function statsText(v) { return v === null || v === undefined ? '—' : money(v) }
+    function renderServiceStatistics(targetBody, targetCanvas, stats, chartKey, label) {
+      const body = $(targetBody), canvas = $(targetCanvas);
+      if (body) body.innerHTML = [['Moda', stats.mode], ['Mediana', stats.median], ['Promedio', stats.average]].map(r => `<tr><td>${r[0]}</td><td>${Array.isArray(r[1]) ? r[1].map(money).join(' / ') : statsText(r[1])}</td></tr>`).join('');
+      if (window.Chart && canvas) {
+        const old = window[chartKey]; if (old) old.destroy();
+        const mode = Array.isArray(stats.mode) ? stats.mode[0] : stats.mode;
+        const cfg = { type: 'bar', data: { labels: ['Moda', 'Mediana', 'Promedio'], datasets: [{ label: `Desperdicio · ${label}`, data: [mode, stats.median, stats.average], backgroundColor: label === 'PAE' ? '#8fc34a' : '#e98138', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.parsed.y == null ? 'Sin moda' : Math.round(c.parsed.y) + ' g'}` } } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Gramos' }, ticks: { callback: v => v + ' g' } } } } };
+        window[chartKey] = new Chart(canvas, cfg)
+      }
+    }
+    function buildServiceWasteStatistics(date, service, selected = '') {
+      const groups = GRADES_BY_SERVICE[service] || [];
+      const values = groups.filter(g => !selected || g === selected).map(g => wasteType(date, service, g)).filter(v => Number(v) > 0);
+      return statisticalSummary(values)
+    }
+    function renderServiceStatisticsSet(date, selected, scope) {
+      const pae = buildServiceWasteStatistics(date, 'PAE', selected), lunch = buildServiceWasteStatistics(date, 'almuerzo', selected);
+      renderServiceStatistics(`${scope}-pae-statistics-body`, `${scope}-pae-statistics-chart`, pae, scope === 'summary' ? 'summaryPaeStatsChart' : 'reportPaeStatsChart', 'PAE');
+      renderServiceStatistics(`${scope}-lunch-statistics-body`, `${scope}-lunch-statistics-chart`, lunch, scope === 'summary' ? 'summaryLunchStatsChart' : 'reportLunchStatsChart', 'Almuerzo');
+    }
+    function renderExtra() {
+      const date = $('global-date').value || today, d = getDayData(date), m = d.menu || {}, n = dayNumbers(date, d), pd = n.pd, pg = n.pg;
+      $('stat-entrega').textContent = pg.v ? pg.pct.toFixed(2) + '%' : '—'; $('stat-entrega-note').textContent = pg.v ? (pg.has ? `${gk(pg.eg)} entregados de ${gk(pg.sg)}` : 'Porcentaje de PAE entregado del día') : 'Registra la entrega del PAE en Menú y gramaje';
+      $('stat-servido').textContent = kgs(n.served / 1000); $('stat-servido-note').textContent = `${money(n.served)} · almuerzo + PAE`;
+      $('stat-desperdicio').textContent = kgs(d.waste / 1000); $('stat-desperdicio-note').textContent = (d.waste || n.delivered) ? `${money(d.waste)} · suma por grado` : 'Sin pesaje todavía'; $('stat-desperdicio-percent').textContent = `Pérdida diaria: ${n.loss.toFixed(1)}%`;
+      $('stat-efectivo').textContent = kgs(n.effective / 1000);
+      if (n.delivered) { $('stat-efectivo-note').textContent = `${money(n.effective)} · ${(100 - n.loss).toFixed(1)}% aprovechado`; const lossL = d.lunchServed ? Math.min(d.lunchWaste / d.lunchServed, 1) : 0, lc = LUNCH_GROUPS.reduce((a, g) => { const c = d.records.filter(r => r.grado === g).length, st = componentStats(m, g); return { c: a.c + c * st.carbs, p: a.p + c * st.protein } }, { c: 0, p: 0 }); $('stat-efectivo-note2').textContent = (lc.c || lc.p) ? `Almuerzo (estimado): carbohidratos ${kgs(lc.c * (1 - lossL) / 1000)} · proteínas ${kgs(lc.p * (1 - lossL) / 1000)}` : '' } else { $('stat-efectivo-note').textContent = 'Aún sin datos del día'; $('stat-efectivo-note2').textContent = '' }
+      $('pae-served-grams').textContent = gk(n.paeServed); $('pae-waste-grams').textContent = gk(d.paeWaste); $('pae-consumed-grams').textContent = gk(Math.max(n.paeDelivered - d.paeWaste, 0));
+      $('pae-liters-note').textContent = pg.has ? `Entregado ${gk(n.paeDelivered)} (${pg.pct.toFixed(2)}% de lo servido por grupo)` : 'Registra la entrega del PAE por grupo en "Menú y gramaje" para ver lo servido y entregado.';
+      $('today-menu-grams').textContent = gk(m.gramaje_total);
+      const infos = REPORT_GROUPS.map(g => groupInfo(date, d, g)), maxS = Math.max(...infos.map(i => i.served), 1), maxW = Math.max(...infos.map(i => i.waste), 1), servedRows = infos.filter(i => i.served > 0);
+      $('served-bars').innerHTML = servedRows.length ? servedRows.map(i => `<div class="bar-row wide"><span>${GROUP_NAMES[i.g]}</span><div class="bar-track"><div class="bar-fill" style="width:${i.served / maxS * 100}%"></div></div><b>${gk(i.served)}</b></div>`).join('') : '<div class="empty">Registra consumos para ver cuánto se sirvió por grado.</div>';
+      $('level-bars').innerHTML = infos.map(i => `<div class="bar-row wide"><span>${GROUP_NAMES[i.g]}</span><div class="bar-track"><div class="bar-fill ${i.waste > 0 ? 'orange' : ''}" style="width:${i.waste / maxW * 100}%"></div></div><b>${gk(i.waste)}</b></div>`).join('');
+      const chips = infos.filter(i => i.tipo === 'almuerzo' || i.served > 0 || i.waste > 0).map(i => `<div class="gg-chip"><b>${GROUP_NAMES[i.g]}</b><span>Ración: ${gk(i.ration)}</span><span>Servido: ${gk(i.served)}${n.served ? ' · ' + pct(i.served / n.served * 100) + ' del total' : ''}</span><span>Desperdicio: ${gk(i.waste)}${i.served ? ' · ' + pct(i.waste / i.served * 100) : ''}</span></div>`); $('today-group-grammages').innerHTML = chips.length ? chips.join('') : 'Sin gramajes individuales configurados.';
+      $('relation-body').innerHTML = relationHTML(date, d, ''); $('report-relation-body').innerHTML = relationHTML(date, d, $('report-grade')?.value || ''); const selectedGrade = $('report-grade')?.value || ''; renderServiceStatisticsSet(date, '', 'summary'); renderServiceStatisticsSet(date, selectedGrade, 'report');
+      $('report-total-waste').textContent = gk(d.waste); $('report-served').textContent = gk(n.served); $('report-waste-percent').textContent = `${n.loss.toFixed(1)}%`;
+      const obs = tipo => { const entrega = (tipo === 'almuerzo' ? [m.notas, pd.v?.observacion] : [pg.v?.observacion]).filter(Boolean).map((x, i) => `<div><b>${i === 0 && tipo === 'almuerzo' ? 'Menú y gramaje / entregado:' : 'Observación de entrega:'}</b> ${safe(x)}</div>`); const desperdicio = getWasteEntries(date, tipo).filter(x => x.nota).map(x => `<div><b>Desperdicio · ${safe(GROUP_NAMES[x.grado] || x.grado || 'General')}:</b> ${safe(x.nota)}</div>`); return `<div><b>OBSERVACIONES DE LO ENTREGADO</b>${entrega.length ? entrega.join('') : '<div>Sin observaciones de entrega para esta fecha.</div>'}</div><hr style="border:0;border-top:1px solid var(--line);margin:8px 0"><div><b>OBSERVACIONES DEL DESPERDICIO</b>${desperdicio.length ? desperdicio.join('') : '<div>Sin observaciones de desperdicio para esta fecha.</div>'}</div>` };
+      [['obs-lunch', 'almuerzo'], ['report-obs-lunch', 'almuerzo'], ['obs-pae', 'PAE'], ['report-obs-pae', 'PAE']].forEach(([id, t]) => { if ($(id)) $(id).innerHTML = obs(t) });
+      const st = componentStats(m); $('today-proteins').textContent = st.protein ? `${gk(st.protein)}${st.proteinDetails ? ' · ' + st.proteinDetails : ''}` : 'Sin registrar'; $('today-carbs').textContent = st.carbs ? `${gk(st.carbs)}${st.carbDetails ? ' · ' + st.carbDetails : ''}` : 'Sin registrar';
+      // Gráfica del menú por grupo (apilada por tipo de componente, kg por ración; bebidas en litros aparte)
+      const all = (m.componentes || []).filter(c => Number(c.gramos) > 0), comps = all.filter(c => (c.unidad || unitOfKind(c.componente)) !== 'L'), drinks = all.filter(c => (c.unidad || unitOfKind(c.componente)) === 'L'), kinds = [...new Set(comps.map(c => String(c.componente || 'otros').toLowerCase()))], sumKind = (k, g) => comps.filter(c => String(c.componente || 'otros').toLowerCase() === k && (!c.grado || c.grado === g)).reduce((a, c) => a + Number(c.gramos), 0), groups = LUNCH_GROUPS.filter(g => kinds.some(k => sumKind(k, g) > 0));
+      $('carb-note').innerHTML = (groups.length ? 'Por ración · ' + kinds.map(k => `${cap(k)}: ${kgs(Math.max(...groups.map(g => sumKind(k, g)), 0) / 1000)}`).join(' · ') : 'Registra los componentes en Menú y gramaje para ver la gráfica.') + (drinks.length ? '<br>Bebidas: ' + drinks.map(c => `${safe(c.alimento)} ${fmtL(c.gramos)} L`).join(' · ') : '');
+      if (carbChart) { carbChart.destroy(); carbChart = null }
+      carbChart = chartOrEmpty('carb-chart', groups.length > 0, 'Aún no hay proteínas, carbohidratos ni legumbres registrados para esta fecha. Regístralos en "Registro de proteínas y carbohidratos del almuerzo" (Menú y gramaje).', cv => new Chart(cv, { type: 'bar', data: { labels: groups.map(g => GROUP_NAMES[g]), datasets: kinds.map(k => ({ label: cap(k), data: groups.map(g => sumKind(k, g) / 1000), backgroundColor: KIND_COLORS[k] || '#b7c4bc', borderRadius: 4 })) }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: t => `${t.dataset.label}: ${Math.round(t.parsed.y * 1000)} g · ${fmtKg(t.parsed.y)} kg` } } }, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'kg por ración' }, ticks: { callback: v => v + ' kg' } } } } }));
+      renderPaeCharts(pd);
+      let last = '';[...document.querySelectorAll('#report-table tr')].forEach(tr => { const td = tr.children[1]; if (!td || tr.children.length < 5) return; const t = td.textContent.trim(); if (t !== last) { last = t; tr.insertAdjacentHTML('beforebegin', `<tr><td colspan="18" style="background:#f2f7df"><b>${t === 'PAE' ? 'PAE' : 'ALMUERZO'}</b></td></tr>`) } })
+    }
+    const _rd = renderDashboard, _rr = renderReports; renderDashboard = function () { _rd(); renderExtra() }; renderReports = function () { _rr(); renderExtra() };
+    function updateKgHints() { ['menu-total', ...LUNCH_GROUPS.map(g => `group-grams-${g}`), 'pae-delivered-percent'].forEach(id => { const el = $(id); if (!el || id === 'pae-delivered-percent') return; let h = el.parentElement.querySelector('.kg-hint'); if (!h) { h = document.createElement('span'); h.className = 'hint kg-hint'; el.parentElement.appendChild(h) } const v = Number(el.value || 0); h.textContent = v ? `= ${fmtKg(v / 1000)} kg` : '' }) }
+    ['input', 'change', 'click'].forEach(ev => document.addEventListener(ev, () => setTimeout(updateKgHints, 60)));
+    document.addEventListener('input', e => { if (e.target.closest('#pae-delivery-form')) { paeDirty = true; if (e.target.matches('.pae-qty,#pae-delivered-percent')) recalcPae() } });
+    document.addEventListener('change', e => { const t = e.target; if (t.matches('.pae-kind,.component-kind')) { const row = t.closest('tr'), u = unitOfKind(t.value), tag = row.querySelector('.unit-tag'); if (tag) { tag.textContent = u; tag.classList.toggle('liter', u === 'L') } const food = row.querySelector('.pae-food'); if (food) food.placeholder = u === 'L' ? 'Ej. Jugo de mora' : 'Ej. Arroz'; if (t.matches('.pae-kind')) { paeDirty = true; recalcPae() } } });
+    document.addEventListener('click', e => { if (e.target.closest('#pae-add-row')) { paeDirty = true; $('pae-delivery-rows').insertAdjacentHTML('beforeend', paeRowHTML()); recalcPae() } if (e.target.closest('#pae-load-menu')) loadPaeFromMenu(); if (e.target.closest('#pae-delivery-rows .remove-row')) { paeDirty = true; setTimeout(recalcPae, 0) } });
+    window.addEventListener('load', () => { renderExtra(); updateKgHints() }); renderExtra(); updateKgHints();
+  </script>
+  <script>
+    // ===== Entrega del PAE por grupo (sexto 1 a once 3): porcentaje, gramaje por grupo y observación =====
+    (function () {
+      const form = $('pae-group-form'); if (!form) return;
+      let dirty = false, formKey = '', formDate = '';
+      const gid = g => `pae-g-${g}`;
+      $('pae-g-grid').innerHTML = PAE_ENTREGA_GROUPS.map(g => `<div class="field"><label for="${gid(g)}">${GROUP_NAMES[g]} (g)</label><input type="number" id="${gid(g)}" min="0" step="any" placeholder="0"></div>`).join('');
+      const readGroups = () => Object.fromEntries(PAE_ENTREGA_GROUPS.map(g => [g, Number($(gid(g)).value || 0)]));
+      function totals() {
+        const pct = Math.min(Math.max(Number($('pae-g-percent').value || 0), 0), 100), sg = Object.values(readGroups()).reduce((a, b) => a + b, 0), eg = sg * pct / 100;
+        $('pae-g-totals').innerHTML = `<div class="pae-total">Servido (g · kg)<b>${gk(sg)}</b></div><div class="pae-total good">Entregado (${pct.toFixed(2)}%)<b>${gk(eg)}</b></div><div class="pae-total bad">No entregado<b>${gk(Math.max(sg - eg, 0))}</b></div>`
+      }
+      function renderGroupForm(date) {
+        const v = store.pae_grupos?.[date] || null, key = date + '|' + JSON.stringify(v);
+        if (formDate !== date) { dirty = false; formDate = date; formKey = '' }
+        $('pae-g-date').value = date;
+        if (!dirty && key !== formKey) {
+          formKey = key; $('pae-g-percent').value = v?.porcentaje_entregado ?? ''; $('pae-g-total').value = v?.gramaje_total ?? ''; $('pae-g-note').value = v?.observacion || '';
+          const map = Object.fromEntries((v?.grupos || []).map(x => [x.grado, x.servido])); PAE_ENTREGA_GROUPS.forEach(g => { $(gid(g)).value = map[g] ?? '' }); totals()
+        }
+        const pg = paeGroupsData(date);
+        $('pae-g-table').innerHTML = pg.v ? PAE_ENTREGA_GROUPS.map(g => pg.map[g]).filter(Boolean).map(x => `<tr><td><span class="badge gray">${GROUP_NAMES[x.g]}</span></td><td>${gk(x.servido)}</td><td><b>${gk(x.entregado)}</b></td><td>${gk(Math.max(x.servido - x.entregado, 0))}</td></tr>`).join('') + `<tr class="tot"><td><b>Total (${pg.pct.toFixed(2)}% entregado)</b></td><td><b>${gk(pg.sg)}</b></td><td><b>${gk(pg.eg)}</b></td><td><b>${gk(Math.max(pg.sg - pg.eg, 0))}</b></td></tr>` : '<tr><td colspan="4" class="empty">Aún no hay entrega PAE registrada.</td></tr>'
+      }
+      // Tablas de resumen y reportes
+      function renderGroupTables() {
+        const date = $('global-date').value || today, pg = paeGroupsData(date);
+        const rows = pg.v ? (pg.list.length ? PAE_ENTREGA_GROUPS.map(g => pg.map[g]).filter(Boolean).map(x => `<tr><td><span class="badge gray">${GROUP_NAMES[x.g]}</span></td><td>${gk(x.servido)}</td><td><b>${gk(x.entregado)}</b></td><td>${gk(Math.max(x.servido - x.entregado, 0))}</td></tr>`).join('') + `<tr class="tot"><td><b>Total (${pg.pct.toFixed(2)}%)</b></td><td><b>${gk(pg.sg)}</b></td><td><b>${gk(pg.eg)}</b></td><td><b>${gk(Math.max(pg.sg - pg.eg, 0))}</b></td></tr>` : `<tr><td colspan="4">Entrega registrada: <b>${pg.pct.toFixed(2)}%</b> · sin gramaje por grupo.</td></tr>`) : '<tr><td colspan="4" class="empty">Aún no hay entrega PAE registrada.</td></tr>';
+        const obs = pg.v?.observacion ? `<b>Observación de entrega PAE:</b> ${safe(pg.v.observacion)}` : 'Sin observación de entrega PAE para esta fecha.';
+        [['pae-g-body', 'pae-g-obs'], ['pae-g-body-r', 'pae-g-obs-r']].forEach(([b, o]) => { if ($(b)) $(b).innerHTML = rows; if ($(o)) $(o).innerHTML = obs })
+      }
+      async function save(e) {
+        e.preventDefault(); const fecha = $('pae-g-date').value || $('global-date').value || today, porcentaje = Number($('pae-g-percent').value || 0);
+        if (!(porcentaje >= 0 && porcentaje <= 100)) return showNotice('El porcentaje entregado debe estar entre 0 y 100.', 'error');
+        const grupos = readGroups(); if (Object.values(grupos).some(v => v < 0)) return showNotice('Los gramajes no pueden ser negativos.', 'error');
+        const gramaje_total = $('pae-g-total').value === '' ? null : Number($('pae-g-total').value), observacion = $('pae-g-note').value.trim();
+        const data = { fecha, porcentaje_entregado: porcentaje, gramaje_total, observacion, grupos };
+        const remote = await api('/api/entrega-pae-grupos', { method: 'POST', body: JSON.stringify(data) });
+        store.pae_grupos[fecha] = remote.ok && remote.data?.data ? { ...remote.data.data, grupos: remote.data.data.grupos } : { fecha, porcentaje_entregado: porcentaje, gramaje_total, observacion, grupos: Object.entries(grupos).filter(([, v]) => v > 0).map(([grado, servido]) => ({ grado, servido, entregado: Math.round(servido * porcentaje) / 100 })) };
+        persist(); dirty = false; formKey = ''; renderGroupForm(fecha); renderDashboard(); renderReports();
+        showNotice(remote.ok ? 'Entrega del PAE guardada en MySQL (gramaje por grupo, porcentaje y observación).' : `Entrega del PAE guardada solo en este navegador: ${remote.data?.error || 'MySQL no respondió'}.`, remote.ok ? 'success' : 'info')
+      }
+      form.addEventListener('submit', save);
+      form.addEventListener('input', e => { dirty = true; if (e.target.id === 'pae-g-total') { const v = Number(e.target.value || 0); if (v > 0) { const each = Math.round(v / PAE_ENTREGA_GROUPS.length * 100) / 100; PAE_ENTREGA_GROUPS.forEach(g => { $(gid(g)).value = each }) } } totals() });
+      // Lectura desde MySQL
+      async function loadGroups(date) { const r = await api(`/api/entrega-pae-grupos?fecha=${date}`); if (r.ok) { if (r.data.data) store.pae_grupos[date] = r.data.data; else delete store.pae_grupos[date]; persist() } }
+      const _sync = syncSelectedDate; syncSelectedDate = async function (date) { await _sync(date); await loadGroups(date); renderGroupForm(date); renderDashboard(); renderReports() };
+      const _re = renderExtra; renderExtra = function () { _re(); renderGroupTables(); renderGroupForm($('global-date').value || today) };
+      renderGroupForm($('global-date').value || today); renderGroupTables();
+      loadGroups(today).then(() => { renderGroupForm($('global-date').value || today); renderDashboard(); renderReports() });
+    })();
+  </script>
+  <script>
+    // Gramaje total -> se divide automáticamente entre los grados que reciben almuerzo
+    (function () {
+      const t = $('menu-total'); if (!t) return; LUNCH_GROUPS.forEach(g => { const i = $(`group-grams-${g}`); if (i) i.step = 'any' });
+      t.addEventListener('input', () => { const v = Number(t.value || 0); if (v <= 0) return; const each = Math.round(v / LUNCH_GROUPS.length * 100) / 100; LUNCH_GROUPS.forEach(g => { const i = $(`group-grams-${g}`); if (i) i.value = each }); updateKgHints() });
+      // El resumen y el reporte se refrescan con los datos guardados en MySQL.
+      setInterval(() => { const a = document.querySelector('[data-panel-view].active')?.dataset.panelView; if (a === 'inicio' || a === 'reportes') syncSelectedDate($('global-date').value || today).catch(() => { }) }, 10000)
+    })();
+  </script>
+  <script>
+    // Conexión en vivo con el formulario de estudiantes:
+    // el formulario externo guarda en MySQL y avisa a este panel para actualizar
+    // inmediatamente el semáforo, la hora y el servicio, sin recargar la página.
+    (function () {
+      let busy = false, last = '';
+      async function refreshStudents(force) {
+        if (busy) return;
+        busy = true;
+        try {
+          const date = $('registro-date')?.value || $('control-date')?.value || today;
+          const r = await api(`/api/control-estudiantes?fecha=${date}`);
+          if (r.ok && Array.isArray(r.data.data)) {
+            const sig = date + '|' + JSON.stringify(r.data.data);
+            if (force || sig !== last) {
+              last = sig;
+              store.control ??= {};
+              store.control[date] = r.data.data;
+              const s = await api('/api/estudiantes');
+              if (s.ok && Array.isArray(s.data.data)) store.students = s.data.data;
+              persist();
+              renderStudents();
+            }
+          }
+        } finally { busy = false }
+      }
+      window.refreshStudentControl = refreshStudents;
+      try { const ch = new BroadcastChannel('ac-students'); ch.onmessage = () => refreshStudents(true) } catch (e) { }
+      window.addEventListener('storage', e => { if (e.key === 'ac-students-ping') refreshStudents(true) });
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshStudents(true) });
+      window.addEventListener('focus', () => refreshStudents(true));
+      setInterval(() => refreshStudents(false), 3000);
+      refreshStudents(true);
+    })();
+  </script>
+</body>
+
+</html>

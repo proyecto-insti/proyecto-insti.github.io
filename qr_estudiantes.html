@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QR desperdicio PAE | Almuerzos Conscientes</title>
+  <style>
+    :root{--ink:#173d35;--ink2:#28564a;--muted:#71857e;--line:#dbe7df;--paper:#fbfdf9;--lime:#bedf71;--orange:#e98138;--blue:#eaf3fb;--blueink:#376180;--shadow:0 24px 70px rgba(34,72,57,.12)}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 10% 8%,#edf6e3 0,transparent 34%),radial-gradient(circle at 90% 90%,#fff0df 0,transparent 28%),var(--paper);color:var(--ink);font-family:Inter,system-ui,sans-serif;display:grid;place-items:center;padding:24px}.page{width:min(100%,650px)}.brand{display:flex;align-items:center;gap:12px;width:max-content;margin:0 auto 22px}.avocado{width:52px;height:52px;border-radius:18px;background:var(--lime);display:grid;place-items:center;font-size:30px}.brand h1{font-size:17px;margin:0}.brand p{font-size:11px;color:var(--muted);margin:3px 0 0}.card{background:#fff;border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);padding:32px;text-align:center}.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:10px;font-weight:800;color:var(--orange);margin:0 0 9px}.title{font:700 34px/1.12 Georgia,serif;margin:0}.subtitle{color:var(--muted);font-size:13px;line-height:1.6;max-width:500px;margin:11px auto 23px}.qr-box{width:310px;max-width:100%;margin:0 auto 20px;padding:16px;border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:0 12px 32px #173d3512}.qr-box img{display:block;width:100%;height:auto;border-radius:8px}.destination{background:var(--blue);border:1px solid #d4e4f1;color:var(--blueink);border-radius:12px;padding:12px;font-size:12px;line-height:1.5;word-break:break-all}.destination strong{display:block;color:var(--ink2);margin-bottom:4px}.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}.btn{border:0;border-radius:10px;padding:12px 15px;font-size:12px;font-weight:800;cursor:pointer;text-decoration:none}.primary{background:var(--ink);color:#fff}.secondary{background:#fff;border:1px solid var(--line);color:var(--ink2)}.note{font-size:11px;color:var(--muted);line-height:1.5;margin:18px auto 0;max-width:500px}.back{display:block;text-align:center;color:var(--ink2);font-size:11px;text-decoration:none;margin-top:17px}@media print{body{background:#fff;padding:0}.brand,.subtitle,.destination,.actions,.note,.back{display:none}.card{box-shadow:none;border:0}.qr-box{border:0;box-shadow:none;width:390px}}
+  </style>
+</head>
+<body><main class="page"><div class="brand"><div class="avocado">🥑</div><div><h1>Almuerzos Conscientes</h1><p>Acceso rápido para el registro estudiantes </p></div></div>
+  <section class="card"><p class="eyebrow">Código de acceso</p><h2 class="title">Desperdicio del PAE</h2><p class="subtitle">Escanea el código QR para ingresar al registro de estudiantes y completar los datos solicitados. Si el código QR no funciona, no puedes escanearlo o no tienes acceso a internet, dirígete al docente encargado del restaurante escolar para recibir ayuda.
+</p>
+    <div class="qr-box"><img id="qr-imagen" alt="Código QR para registrar desperdicio PAE" src="qr.png"></div>
+    <div class="destination" id="qr-destino" hidden></div>
+
+    <div class="actions"><button class="btn primary" type="button" onclick="window.print()">Imprimir QR</button><a class="btn secondary" href="desperdicio-pae">Abrir formulario</a><a class="btn secondary" href="visionmision.html"> Visión y misión</a></div>
+
+  </section></main>
+  <script>
+    (async function () {
+      try {
+        const respuesta = await fetch('/api/qr-acceso');
+        const datos = await respuesta.json();
+        if (!datos.ok || !datos.url) return;
+        document.getElementById('qr-imagen').src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=' + encodeURIComponent(datos.url);
+        const caja = document.getElementById('qr-destino');
+        caja.hidden = false;
+        caja.innerHTML = '<strong>Destino del código</strong>' + datos.url.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+      } catch (e) { /* sin conexión se conserva la imagen estática qr.png */ }
+    })();
+  </script>
+</body></html>

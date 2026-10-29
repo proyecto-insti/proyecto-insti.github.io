@@ -1,0 +1,37 @@
+# Almuerzos Conscientes - rewrites para InfinityFree (Apache).
+# Todas las rutas dinámicas caen en api.php; los archivos estáticos
+# (HTML, imágenes) los sirve Apache directamente.
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Bloquea el acceso directo a archivos de configuración y datos.
+  RewriteRule ^\.env - [F,L]
+  RewriteRule ^\.git - [F,L]
+  RewriteRule ^database/ - [F,L]
+  RewriteRule \.(py|sql)$ - [F,L]
+
+  # Archivos existentes y directorios se sirven tal cual.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Rutas del backend (paridad con las rutas de Flask).
+  RewriteRule ^api/ api.php [L,QSA]
+  RewriteRule ^acceso-formulario/ api.php [L,QSA]
+  RewriteRule ^estudiantes/guardar$ api.php [L,QSA]
+
+  # URLs "bonitas" usadas por los enlaces del frontend.
+  RewriteRule ^desperdicio-pae$ desperdicio_pae.html [L]
+  RewriteRule ^qr-estudiantes$ qr_estudiantes.html [L]
+</IfModule>
+
+# Nunca entregar el .env ni los SQL como texto plano.
+<FilesMatch "^\.env">
+  Require all denied
+</FilesMatch>
+<FilesMatch "\.(sql|md)$">
+  Require all denied
+</FilesMatch>

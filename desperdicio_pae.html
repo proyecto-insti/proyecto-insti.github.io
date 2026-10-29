@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d35">
+  <title>Desperdicio PAE | Almuerzos Conscientes</title>
+  <style>
+    :root{--ink:#173d35;--ink2:#28564a;--muted:#71857e;--line:#dbe7df;--paper:#fbfdf9;--lime:#bedf71;--orange:#e98138;--red:#ce5c5c}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 12% 10%,#edf6e3 0,transparent 35%),radial-gradient(circle at 90% 90%,#fff0df 0,transparent 30%),var(--paper);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;display:grid;place-items:center;padding:22px}.page{width:min(100%,460px)}.brand{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 auto 22px}.avocado{width:54px;height:54px;border-radius:18px;background:var(--lime);display:grid;place-items:center;font-size:31px;box-shadow:0 12px 25px #bedf7155}.brand h1{font-size:18px;margin:0}.brand p{font-size:11px;color:var(--muted);margin:3px 0 0}.card{background:#fff;border:1px solid var(--line);border-radius:25px;padding:34px;box-shadow:0 24px 70px rgba(34,72,57,.13)}.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:10px;font-weight:800;color:var(--orange);margin:0 0 9px}.title{font:700 35px/1.12 Georgia,serif;margin:0}.subtitle{color:var(--muted);font-size:13px;line-height:1.6;margin:11px 0 25px}label{display:block;color:var(--ink2);font-size:12px;font-weight:700;margin:16px 0 6px}input,select{width:100%;border:1px solid var(--line);background:#fcfefb;color:var(--ink);padding:12px;border-radius:10px;font:inherit;font-size:13px;outline:0}input:focus,select:focus{border-color:#6eae87;box-shadow:0 0 0 3px #6eae8725}.btn{width:100%;border:0;border-radius:10px;background:var(--ink);color:#fff;padding:13px;margin-top:21px;font-size:13px;font-weight:800;cursor:pointer}.btn:hover{background:var(--ink2)}.btn:disabled{opacity:.6;cursor:wait}.estado{display:none;padding:12px;border-radius:10px;font-size:12px;line-height:1.5;margin-top:15px}.estado.show{display:block}.estado.ok{background:#edf8ee;color:#317049;border:1px solid #cfe8d3}.estado.error{background:#fff0ef;color:#963d3d;border:1px solid #f2cccc}.footer{text-align:center;margin-top:16px;font-size:11px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="brand"><div class="avocado">🥑</div><div><h1>Almuerzos Conscientes</h1><p>Registro de desperdicio PAE</p></div></header>
+    <section class="card">
+      <p class="eyebrow">Formulario público</p>
+      <h2 class="title">Desperdicio del PAE</h2>
+      <p class="subtitle">Selecciona tu grado y escribe los gramos que sobraron en tu plato. Si no tienes conexión, el registro se guardará en el celular y se enviará automáticamente cuando vuelva la red.</p>
+      <form id="form-desperdicio" novalidate>
+        <label for="grado">Grado</label>
+        <select id="grado" required>
+          <option value="">Seleccione su grado</option>
+        </select>
+        <label for="peso">Gramos sobrantes (g)</label>
+        <input type="number" id="peso" min="1" step="any" inputmode="decimal" placeholder="Ej. 150" required>
+        <label for="nota">Observación (opcional)</label>
+        <input type="text" id="nota" maxlength="500" placeholder="Ej. plato con mucha sal">
+        <button class="btn" type="submit">Guardar registro</button>
+      </form>
+      <div class="estado" id="estado" role="alert"></div>
+      <p class="footer">Dirígete al docente encargado del restaurante escolar si necesitas ayuda.</p>
+    </section>
+  </main>
+  <script>
+    const ETIQUETAS_GRADO = { '5': 'Quinto', '6': 'Sexto', '7': 'Séptimo', '8': 'Octavo', '9': 'Noveno', '10': 'Décimo', '11': 'Once' };
+    const GRADOS_FORMULARIO = ['5-1','5-2','5-3','7-1','7-2','7-3','8-1','8-2','8-3','10-1','10-2','10-3','11-1','11-2','11-3'];
+    const selectGrado = document.getElementById('grado');
+    GRADOS_FORMULARIO.forEach(g => {
+      const [anio, carpeta] = g.split('-');
+      const opcion = document.createElement('option');
+      opcion.value = g;
+      opcion.textContent = ETIQUETAS_GRADO[anio] + ' ' + carpeta;
+      selectGrado.appendChild(opcion);
+    });
+
+    const CLAVE_COLA = 'cola_desperdicio_pae';
+
+    function generarUid() {
+      return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(16).slice(2);
+    }
+
+    function mostrar(texto, tipo) {
+      const caja = document.getElementById('estado');
+      caja.textContent = texto;
+      caja.className = 'estado show' + (tipo ? ' ' + tipo : '');
+    }
+
+    async function enviarRegistro(registro, intentos) {
+      for (let intento = 0; intento < intentos; intento++) {
+        try {
+          const respuesta = await fetch('/api/formulario-desperdicio-pae', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(registro)
+          });
+          const datos = await respuesta.json().catch(function () { return {}; });
+          if (respuesta.ok && datos.ok) return { ok: true };
+          return { ok: false, error: datos.error || 'No fue posible guardar el registro.' };
+        } catch (e) {
+          if (intento < intentos - 1) await new Promise(function (r) { setTimeout(r, 1000 * (intento + 1)); });
+        }
+      }
+      return { ok: false, offline: true };
+    }
+
+    async function enviarColaPendiente() {
+      let cola = [];
+      try { cola = JSON.parse(localStorage.getItem(CLAVE_COLA) || '[]'); } catch (e) { cola = []; }
+      if (!cola.length) return;
+      const pendientes = [];
+      for (const registro of cola) {
+        const res = await enviarRegistro(registro, 1);
+        if (res.offline) pendientes.push(registro);
+      }
+      localStorage.setItem(CLAVE_COLA, JSON.stringify(pendientes));
+      if (!pendientes.length) mostrar('Se enviaron los registros que estaban pendientes sin conexión.', 'ok');
+    }
+
+    document.getElementById('form-desperdicio').addEventListener('submit', async function (evento) {
+      evento.preventDefault();
+      const grado = document.getElementById('grado').value;
+      const peso = parseFloat(document.getElementById('peso').value);
+      const nota = document.getElementById('nota').value.trim();
+      const boton = evento.target.querySelector('.btn');
+      if (!grado || !(peso > 0)) {
+        mostrar('Seleccione el grado y escriba un gramaje mayor que cero.', 'error');
+        return;
+      }
+      const registro = { grado: grado, peso_sobrante_gramos: peso, nota: nota || null, uid: generarUid() };
+      boton.disabled = true;
+      mostrar('Guardando...', '');
+      const res = await enviarRegistro(registro, 3);
+      boton.disabled = false;
+      if (res.ok) {
+        mostrar('✔ Guardado: ' + peso + ' g de desperdicio PAE en ' + grado, 'ok');
+        evento.target.reset();
+        enviarColaPendiente();
+      } else if (res.offline) {
+        let cola = [];
+        try { cola = JSON.parse(localStorage.getItem(CLAVE_COLA) || '[]'); } catch (e) { cola = []; }
+        cola.push(registro);
+        localStorage.setItem(CLAVE_COLA, JSON.stringify(cola));
+        mostrar('Sin conexión: el registro se enviará automáticamente cuando haya red.', 'error');
+      } else {
+        mostrar(res.error, 'error');
+      }
+    });
+
+    enviarColaPendiente();
+  </script>
+</body>
+</html>

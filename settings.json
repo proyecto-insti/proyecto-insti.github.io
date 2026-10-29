@@ -1,0 +1,4 @@
+{
+    "python.terminal.useEnvFile": true,
+    "livePreview.defaultPreviewPath": "/src/public/index.html"
+}
